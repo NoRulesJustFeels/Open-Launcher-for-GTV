@@ -120,7 +120,9 @@ public class ObservableScrollView extends ScrollView {
 	}
 
 	public void resetScroll() {
+		level = 0;
 		super.onScrollChanged(0, 0, 0, 0);
+		invalidate();
 	}
 
 }

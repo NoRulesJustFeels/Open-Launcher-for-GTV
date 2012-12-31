@@ -275,13 +275,15 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 
 		// Reset the user interface components
 		scrollViewContent.removeAllViews();
-		scrollView.resetScroll();
 		recentsGallery = null;
+		currentGalleryRow = 0;
 		updateUserInterface();
 		bindItems();
 		((LauncherApplication) getApplicationContext()).loadRecents();
 		bindRecents();
 		updateStatus();
+		scrollView.scrollTo(0, 0);
+		scrollView.resetScroll();
 
 		// For first time install show the introduction dialog with some user
 		// instructions
