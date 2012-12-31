@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/currentRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/dialog_current_row"
+            android:textColor="@color/white" />
+
+        <RadioButton
+            android:id="@+id/newRadio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_new_row"
+            android:textColor="@color/white" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/rowName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/dialog_new_row_name"
+        android:textColor="@color/white"
+        android:visibility="gone" >
+    </EditText>
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/black"
+        android:columnWidth="100dp"
+        android:gravity="center"
+        android:listSelector="@drawable/gallery_selector"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth" >
+    </GridView>
+
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- For API level 11 or later, the Holo theme is available and we prefer that. -->
+    <style name="Theme" parent="android:Theme.Holo.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- For API level 11 or later, the Holo theme is available and we prefer that. -->
+    <style name="ThemeDialog" parent="android:Theme.Holo.Dialog.NoActionBar">
+    </style>
+
+    <!-- For API level 11 or later, we can use the magical DialogWhenLarge theme. -->
+    <style name="ThemeDialogWhenLarge" parent="android:style/Theme.Holo.DialogWhenLarge.NoActionBar">
+    </style>
+    
+    <!-- A theme that has a translucent background.  Here we explicitly specify
+         that this theme is to inherit from the system's translucent theme,
+         which sets up various attributes correctly. -->
+    <style name="Theme.Translucent" parent="android:Theme.Holo.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+</resources>

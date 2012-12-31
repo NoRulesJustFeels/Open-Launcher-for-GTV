@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="@string/preferences_category_general" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="general.clock"
+            android:summary="@string/preferences_general_clock_summary_checked"
+            android:title="@string/preferences_general_clock_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="general.weather"
+            android:summary="@string/preferences_general_weather_summary_checked"
+            android:title="@string/preferences_general_weather_title" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/preferences_category_rows" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="rows.row_name"
+            android:summary="@string/preferences_rows_row_name_summary_checked"
+            android:title="@string/preferences_rows_row_name_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="rows.item_name"
+            android:summary="@string/preferences_rows_item_name_summary_checked"
+            android:title="@string/preferences_rows_item_name_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

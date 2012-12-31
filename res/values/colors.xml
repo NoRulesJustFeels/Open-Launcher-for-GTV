@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#808080</color>
+    <color name="red">#FF0000</color>
+    <color name="green">#00FF00</color>
+    <color name="light_green">#66FF00</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="blue">#0000FF</color>
+    <color name="logo_blue">#000985</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="ics_blue">#0099cc</color>
+    <color name="error_message">#ffc00000</color>
+    <color name="translucent_black">#80000000</color>
+    <color name="appwidget_text">#fff7faff</color>
+    <color name="title_grey">#7e7f78</color>
+    <color name="holo_blue">#33b5e5</color>
+    <color name="holo_blue_darker">#2687aa</color>
+    <color name="clock_color">#FFcecece</color>
+    <color name="clock_shadow">#FF000000</color>
+    <color name="app_name">#FF88adf5</color>
+    <color name="app_name_selected">#FFb4cdff</color>
+    <color name="app_name_shadow">#00000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="layer_name">#FFcecece</color>
+    <color name="layer_name_shadow">#AA000000</color>
+    <color name="weather_temp_color">#FF88adf5</color>
+    <color name="weather_temp_shadow">#FF000000</color>
+    <color name="weather_day_color">#FFFF00</color>
+    <color name="weather_day_shadow">#FF000000</color>
+</resources>

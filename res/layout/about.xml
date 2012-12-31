@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="0dip"
+    android:paddingRight="0dip" >
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="26dip"
+            android:paddingRight="26dip" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="6dip" >
+                
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher_home" 
+                    android:paddingRight="10dip"/>
+
+                <TextView
+                    android:id="@+id/about_text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:text="@string/about_title"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/version_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/feedback_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_button_feedback_email"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <Button
+                android:id="@+id/button_web"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="26dip"
+                android:paddingRight="26dip"
+                android:text="@string/about_button_web"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <Button
+                android:id="@+id/button_privacy_policy"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="26dip"
+                android:paddingRight="26dip"
+                android:text="@string/about_button_privacy_policy"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <Button
+                android:id="@+id/button_more_apps"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="26dip"
+                android:paddingRight="26dip"
+                android:text="@string/about_button_more_apps"
+                android:textSize="18sp" />
+            
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="4dip" >
+
+                <TextView
+                    android:id="@+id/copyright_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_copyright"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

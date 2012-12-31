@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:home="http://schemas.android.com/apk/res/com.entertailion.android.launcher"
+    android:layout_width="fill_parent"
+    android:layout_height="55dip">
+
+    <com.entertailion.android.launcher.widget.EcoGallery
+        android:id="@+id/gallery"
+        android:layout_width="fill_parent"
+        android:layout_height="55dip"
+        android:layout_marginBottom="0dip"
+        android:layout_marginTop="0dip"
+        android:paddingBottom="0dip"
+        android:paddingTop="0dip"
+        home:spacing="30dip" />
+
+</RelativeLayout>

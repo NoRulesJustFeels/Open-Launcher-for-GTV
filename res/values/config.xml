@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <integer name="development">1</integer>
+
+    <integer name="clock_time">100</integer>
+    <integer name="move_animation_delay">500</integer>
+
+    <item name="pager_position" type="id"></item>
+    <item name="gallery_title" type="id"></item>
+    <item name="row_id" type="id"></item>
+
+</resources>

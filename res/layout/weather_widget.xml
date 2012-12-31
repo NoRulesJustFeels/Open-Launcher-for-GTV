@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="50dp"
+    android:gravity="center_vertical|center_horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/current_icon"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:scaleType="fitXY" >
+        </ImageView>
+
+        <TextView
+            android:id="@+id/current_temp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/weather_temp_shadow"
+            android:shadowDx="1.0"
+            android:shadowDy="1.0"
+            android:shadowRadius="1.0"
+            android:textColor="@color/weather_temp_color"
+            android:textSize="@dimen/weather_temperature"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/current_highlow"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/weather_temp_color"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal" >
+
+                <ImageView
+                    android:id="@+id/forecast1_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_marginTop="5dip"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/forecast1_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:shadowColor="@color/weather_day_shadow"
+                    android:shadowDx="2.0"
+                    android:shadowDy="2.0"
+                    android:shadowRadius="1.0"
+                    android:text=""
+                    android:textColor="@color/weather_day_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/forecast1_highlow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/weather_temp_color"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal" >
+
+                <ImageView
+                    android:id="@+id/forecast2_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_marginTop="5dip"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/forecast2_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:shadowColor="@color/weather_day_shadow"
+                    android:shadowDx="2.0"
+                    android:shadowDy="2.0"
+                    android:shadowRadius="1.0"
+                    android:text=""
+                    android:textColor="@color/weather_day_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/forecast2_highlow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/weather_temp_color"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal" >
+
+                <ImageView
+                    android:id="@+id/forecast3_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_marginTop="5dip"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/forecast3_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:shadowColor="@color/weather_day_shadow"
+                    android:shadowDx="2.0"
+                    android:shadowDy="2.0"
+                    android:shadowRadius="1.0"
+                    android:text=""
+                    android:textColor="@color/weather_day_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/forecast3_highlow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/weather_temp_color"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" >
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal" >
+
+                <ImageView
+                    android:id="@+id/forecast4_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_marginTop="5dip"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/forecast4_day"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:shadowColor="@color/weather_day_shadow"
+                    android:shadowDx="2.0"
+                    android:shadowDy="2.0"
+                    android:shadowRadius="1.0"
+                    android:text=""
+                    android:textColor="@color/weather_day_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/forecast4_highlow"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/weather_temp_color"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="left"
+        android:indeterminate="true"
+        android:visible="false" />
+
+</FrameLayout>

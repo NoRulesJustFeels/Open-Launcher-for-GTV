@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Home -->
+    <string name="home_title">Open Launcher for GTV</string>
+    <string name="show_all_apps">All</string>
+    <string name="notifications">Notifications</string>
+    <string name="bookmarks">Browser Bookmarks</string>
+    <string name="all_apps">All Apps</string>
+    <string name="spotlight_web_apps">Spotlight Web Apps</string>
+
+    <!-- Home Menus -->
+    <string name="menu_about">About</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_add_row">Add Row</string>
+    <string name="menu_add_app">Add App</string>
+    <string name="menu_add_spotlight_web_app">Add Spotlight Web App</string>
+    <string name="menu_add_bookmark">Add Browser Bookmark</string>
+    <string name="menu_delete_item">Delete Item</string>
+    <string name="menu_delete_row">Delete Row</string>
+    <string name="menu_uninstall_app">Uninstall App</string>
+
+    <!-- Layers -->
+    <string name="layer_all_apps">ALL APPS</string>
+    <string name="layer_recent_apps">RECENT APPS</string>
+    <string name="layer_favorites">FAVORITES</string>
+    <string name="layer_web_apps">SPOTLIGHT WEB APPS</string>
+    <string name="unknown">Unknown</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_service_label">Open Launcher</string>
+    <string name="accessibility_service_description">Required by Open Launcher to support notificaitons</string>
+
+    <!-- Message displayed when a shortcut is created by an external application -->
+    <string name="shortcut_installed">Shortcut \"<xliff:g id="name">%s</xliff:g>\" created.</string>
+    <!-- Message displayed when a shortcut is created by an external application -->
+    <string name="shortcut_not_installed">Shortcut \"<xliff:g id="name" example="">%s</xliff:g>\" could not be created.</string>
+    <!-- Message displayed when a shortcut is uninstalled by an external application -->
+    <string name="shortcut_uninstalled">Shortcut \"<xliff:g id="name" example="">%s</xliff:g>\" was removed.</string>
+    <!-- Message displayed when an external application attemps to create a shortcut that already exists -->
+    <string name="shortcut_duplicate">Shortcut \"<xliff:g id="name" example="">%s</xliff:g>\" already exists.</string>
+
+    <!-- About -->
+    <string name="about_title">Open Launcher</string>
+    <string name="about_button_privacy_policy">Privacy Policy</string>
+    <string name="about_button_privacy_policy_url">http://blog.entertailion.com/privacy-policy</string>
+    <string name="about_button_web">Web Site</string>
+    <string name="about_button_web_url">https://github.com/entertailion/Open-Launcher-for-GTV</string>
+    <string name="about_button_more_apps">More Apps</string>
+    <string name="about_button_more_apps_url">https://play.google.com/store/apps/developer?id=ENTERTAILION+LLC</string>
+    <string name="about_version_title">Version: %s</string>
+    <string name="about_button_feedback">Feedback</string>
+    <string name="about_button_feedback_email">openlauncher@entertailion.com</string>
+    <string name="about_copyright">\u00A9 2012 ENTERTAILION LLC. All other trademarks and copyrights are property of their respective owners. All rights reserved.</string>
+    <string name="unknown_build">Unknown</string>
+
+    <!-- Introduction -->
+    <string name="introduction_instruction1">Use the arrow buttons to navigate between the rows of your favorite apps.</string>
+    <string name="introduction_instruction2">Use the Menu button to add your own rows and favorites.</string>
+    <string name="introduction_button">OK</string>
+
+    <!-- Preferences -->
+    <string name="preferences_category_general">General Settings</string>
+    <string name="preferences_general_clock_title">Clock</string>
+    <string name="preferences_general_clock_summary_checked">Show the clock</string>
+    <string name="preferences_general_clock_summary_unchecked">Hide the clock</string>
+    <string name="preferences_general_weather_title">Weather (USA only)</string>
+    <string name="preferences_general_weather_summary_checked">Show the weather</string>
+    <string name="preferences_general_weather_summary_unchecked">Hide the weather</string>
+    <string name="preferences_category_rows">Rows</string>
+    <string name="preferences_rows_row_name_title">Row Name</string>
+    <string name="preferences_rows_row_name_summary_checked">Show the row name</string>
+    <string name="preferences_rows_row_name_summary_unchecked">Hide the row name</string>
+    <string name="preferences_rows_item_name_title">App Name</string>
+    <string name="preferences_rows_item_name_summary_checked">Show the app name</string>
+    <string name="preferences_rows_item_name_summary_unchecked">Hide the app name</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_current_row">Current row</string>
+    <string name="dialog_new_row">New row</string>
+    <string name="dialog_new_row_name">Enter row name</string>
+    <string name="dialog_new_row_name_alert">You must enter a name for the new row.</string>
+    <string name="dialog_delete_item_message">Are you sure you want to delete the current item?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete_row_message">Are you sure you want to delete the current row?</string>
+    <string name="dialog_select_row">Select the row for %s</string>
+
+    <!-- Rating -->
+    <string name="rating_title">Rate Open Launcher</string>
+    <string name="rating_message">If you enjoy using Open Launcher, please take a moment to rate it. Thanks for your support!</string>
+    <string name="rating_ok">Rate App</string>
+    <string name="rating_remind">Remind me later</string>
+    <string name="rating_no">No, thanks</string>
+
+    <!-- Weather -->
+    <string name="day_sunday">Sun</string>
+    <string name="day_monday">Mon</string>
+    <string name="day_tuesday">Tue</string>
+    <string name="day_wednesday">Wed</string>
+    <string name="day_thursday">Thu</string>
+    <string name="day_friday">Fri</string>
+    <string name="day_saturday">Sat</string>
+
+</resources>

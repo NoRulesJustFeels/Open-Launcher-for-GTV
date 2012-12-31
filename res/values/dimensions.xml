@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="clock_time">26.0dip</dimen>
+    <dimen name="clock_ampm">12.0dip</dimen>
+    <dimen name="app_icon_width">100dip</dimen>
+    <dimen name="app_icon_height">100dip</dimen>
+    <dimen name="scroll_height">55dip</dimen>
+    <dimen name="weather_temperature">26.0dip</dimen>
+
+</resources>

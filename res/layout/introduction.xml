@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="0dip"
+    android:paddingRight="0dip" >
+
+    <ScrollView
+        android:id="@+id/ScrollView01"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="26dip"
+            android:paddingRight="26dip" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="6dip" >
+                
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_launcher_home" 
+                     android:paddingRight="10dip"/>
+
+                <TextView
+                    android:id="@+id/intro_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:text="@string/about_title"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+            
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="0dip" >
+
+                <ImageView
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
+                    android:src="@drawable/arrows" 
+                    android:padding="6dip" />
+
+                <TextView
+                    android:id="@+id/intro_text1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:text="@string/introduction_instruction1"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="0dip" >
+
+                <ImageView
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
+                    android:src="@drawable/menu" 
+                    android:padding="6dip" />
+
+                <TextView
+                    android:id="@+id/intro_text2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10sp"
+                    android:text="@string/introduction_instruction2"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="26dip"
+                android:background="@drawable/empty" />
+
+            <Button
+                android:id="@+id/intro_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="26dip"
+                android:paddingRight="26dip"
+                android:text="@string/introduction_button"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

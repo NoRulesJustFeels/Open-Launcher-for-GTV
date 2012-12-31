@@ -1,0 +1,159 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dock"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:id="@+id/top_gradient"
+        android:layout_width="fill_parent"
+        android:layout_height="40dip"
+        android:layout_alignParentTop="true"
+        android:background="#DD000000"
+        android:visibility="visible" />
+
+    <com.entertailion.android.launcher.widget.Weather
+        android:id="@+id/weather"
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:alpha="0.7"
+        android:paddingLeft="10.0dip" >
+    </com.entertailion.android.launcher.widget.Weather>
+
+    <com.entertailion.android.launcher.widget.Clock
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:alpha="0.7"
+        android:paddingRight="10.0dip" >
+    </com.entertailion.android.launcher.widget.Clock>
+
+    <ImageView
+        android:id="@+id/bottom_gradient"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/home_bg"
+        android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/arrow_up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="105dip"
+        android:alpha="0.5"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_up" />
+
+    <ImageView
+        android:id="@+id/arrow_down"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dip"
+        android:alpha="0.5"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_down" />
+
+    <com.entertailion.android.launcher.widget.ObservableScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="55dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="44dip"
+        android:layout_marginTop="0dip"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dip"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:paddingBottom="0dip"
+        android:paddingTop="0dip"
+        android:scrollbarAlwaysDrawVerticalTrack="false"
+        android:scrollbarSize="0dip"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/scroll_view_content"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dip"
+            android:layout_marginTop="0dip"
+            android:orientation="vertical"
+            android:paddingBottom="0dip"
+            android:paddingTop="0dip" >
+        </LinearLayout>
+    </com.entertailion.android.launcher.widget.ObservableScrollView>
+
+    <ImageView
+        android:id="@+id/selector"
+        android:layout_width="110dip"
+        android:layout_height="90dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/gallery_item_over" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dip"
+        android:gravity="center"
+        android:shadowColor="@color/app_name_shadow"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:singleLine="true"
+        android:textColor="@color/app_name"
+        android:textSize="20.0dip"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/layer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="105dip"
+        android:alpha="0.7"
+        android:gravity="center"
+        android:paddingLeft="5dip"
+        android:shadowColor="@color/layer_name_shadow"
+        android:shadowDx="1.0"
+        android:shadowDy="1.0"
+        android:shadowRadius="1.0"
+        android:singleLine="true"
+        android:textColor="@color/layer_name"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/cover"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FF000000"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/menu"
+        android:layout_width="25dip"
+        android:layout_height="25dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="5.0dip"
+        android:paddingRight="5.0dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/menu" />
+
+</RelativeLayout>
