@@ -14,7 +14,7 @@ Open-Launcher-for-GTV
 <li>Overlay design that displays more of live TV</li>
 <li>Direct access to browser bookmarks</li>
 <li>Direct access to <a href="https://www.google.com/tv/spotlight-gallery.html">Spotlight</a> web apps</li>
-<li>Displays current weather</li>
+<li>Displays current weather (USA only)</li>
 <li>Various customizable settings</li>
 </ul>
 </p>
@@ -58,6 +58,7 @@ Open-Launcher-for-GTV
 <li>How do I go back to the default home launcher app? - Settings/Applications/Manage Applications/Open Launcher for GTV/Clear defaults</li>
 <li>How do I uninstall the Open Launcher? - Settings//Applications/Manage Applications/Open Launcher for GTV/Uninstall.</li>
 <li>Why doesn't all the menu options show for the Recent Apps row? - The Recent Apps row cannot be edited. The recent apps are tracked by the system. Move to another row to see all of the available menu options.</li>
+<li>When I press the Home button the Open Launcher does not show. - You need to clear the existing default launcher: Settings/Applications/Manage Applications/Home/Clear defaults</li>
 </ul>
 </p>
 
