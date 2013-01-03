@@ -35,6 +35,7 @@ public class Analytics {
 	private static final String LOG_CAT = "Analytics";
 
 	public static final String ANALYTICS = "Analytics";
+	public static final String LAUNCHER_MAIN = "launcher.main";
 	public static final String LAUNCHER_HOME = "launcher.home";
 	public static final String ABOUT_PRIVACY_POLICY = "about.privacy_policy";
 	public static final String ABOUT_WEB_SITE = "about.website";
@@ -46,9 +47,11 @@ public class Analytics {
 	public static final String DIALOG_SPOTLIGHT_WEB_APPS = "dialog.spotlight_web_apps";
 	public static final String DIALOG_ADD_APP = "dialog.add_app";
 	public static final String DIALOG_ADD_SPOTLIGHT_WEB_APP = "dialog.add_spotlight_web_app";
+	public static final String DIALOG_ADD_SHORTCUT = "dialog.add_shortcut";
 	public static final String DIALOG_DELETE_ITEM = "dialog.delete_item";
 	public static final String DIALOG_DELETE_ROW = "dialog.delete_row";
 	public static final String SETTINGS = "settings";
+	public static final String SYSTEM_SETTINGS = "system.settings";
 	public static final String PREFERENCE_CLOCK_ON = "preference.clock.on";
 	public static final String PREFERENCE_CLOCK_OFF = "preference.clock.off";
 	public static final String PREFERENCE_WEATHER_ON = "preference.weather.on";
@@ -69,6 +72,8 @@ public class Analytics {
 	public static final String ADD_APP_WITH_ROW = "add.app_with_row";
 	public static final String ADD_SPOTLIGHT_WEB_APP = "add.spotlight_web_app";
 	public static final String ADD_SPOTLIGHT_WEB_APP_WITH_ROW = "add.spotlight_web_app_with_row";
+	public static final String ADD_SHORTCUT = "add.shortcut";
+	public static final String ADD_SHORTCUT_WITH_ROW = "add.shortcut_with_row";
 	public static final String DELETE_ITEM = "delete.item";
 	public static final String DELETE_ROW = "delete.row";
 	public static final String UNINSTALL_APP = "uninstall.app";

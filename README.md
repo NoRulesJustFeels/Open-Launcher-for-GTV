@@ -26,7 +26,7 @@ Open-Launcher-for-GTV
 <li>To add a TV channel as a favorite: Go to live TV, press Menu, select Save and then "Add channel to home screen". Type in the channel number or name. Select the channel from the list and press OK.</li>
 <li>To add a web site as a favorite: Load the site in the Chrome browser. Press Menu, select Save and then "Add to home screen". Confirm the web site details and select the OK button.</li>
 <li>To add a web site to bookmarks: Add bookmark in Chrome and then use Bookmarks app.</li>
-<li>To uninstall an app: Select All Apps, the long click on the app you want to uninstall.</li>
+<li>To uninstall an app: Select All Apps, then long click on the app you want to uninstall.</li>
 </ul>
 </p>
 

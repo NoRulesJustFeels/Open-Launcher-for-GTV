@@ -33,6 +33,8 @@ import com.entertailion.android.launcher.utils.Utils;
  */
 public class ApplicationInfo extends ItemInfo {
 
+	private static final String LOG_TAG = "ApplicationInfo";
+
 	/**
 	 * Track if the application icon has been resized.
 	 */

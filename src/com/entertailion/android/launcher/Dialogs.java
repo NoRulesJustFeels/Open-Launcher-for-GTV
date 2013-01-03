@@ -24,7 +24,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -270,7 +269,7 @@ public class Dialogs {
 				context.showCover(false);
 				dialog.dismiss();
 				if (itemInfo instanceof ApplicationInfo) {
-					ApplicationInfo applicationInfo = (ApplicationInfo)itemInfo;
+					ApplicationInfo applicationInfo = (ApplicationInfo) itemInfo;
 					RecentAppsTable.persistRecentApp(context, applicationInfo);
 				}
 			}
@@ -349,6 +348,13 @@ public class Dialogs {
 		spotlightWebApps.setTitle(context.getString(R.string.spotlight_web_apps));
 		spotlightWebApps.setDrawable(context.getResources().getDrawable(R.drawable.spotlight));
 		apps.add(spotlightWebApps);
+
+		// add live TV as a virtual app
+		VirtualAppInfo liveTV = new VirtualAppInfo();
+		liveTV.setType(DatabaseHelper.VIRTUAL_LIVE_TV);
+		liveTV.setTitle(context.getString(R.string.live_tv));
+		liveTV.setDrawable(context.getResources().getDrawable(R.drawable.livetv));
+		apps.add(liveTV);
 
 		Collections.sort(apps, new Comparator<ItemInfo>() {
 
@@ -552,7 +558,7 @@ public class Dialogs {
 					return;
 				}
 				ItemInfo itemInfo = (ItemInfo) parent.getAdapter().getItem(position);
-				boolean currentRow = name.length() == 0;
+				boolean currentRow = !newRadioButton.isChecked();
 				context.addItem(itemInfo, currentRow ? null : name);
 				context.showCover(false);
 				dialog.dismiss();
@@ -631,7 +637,7 @@ public class Dialogs {
 					return;
 				}
 				ItemInfo itemInfo = (ItemInfo) parent.getAdapter().getItem(position);
-				boolean currentRow = name.length() == 0;
+				boolean currentRow = !newRadioButton.isChecked();
 				context.addItem(itemInfo, currentRow ? null : name);
 				context.showCover(false);
 				dialog.dismiss();
@@ -655,7 +661,7 @@ public class Dialogs {
 		});
 		context.showCover(true);
 		dialog.show();
-		Analytics.logEvent(Analytics.DIALOG_ADD_APP);
+		Analytics.logEvent(Analytics.DIALOG_ADD_SPOTLIGHT_WEB_APP);
 	}
 
 	/**
@@ -887,6 +893,34 @@ public class Dialogs {
 		selectTextView.setText(context.getString(R.string.dialog_select_row, name));
 
 		final Spinner spinner = (Spinner) dialog.findViewById(R.id.spinner);
+
+		final EditText nameEditText = (EditText) dialog.findViewById(R.id.rowName);
+		final RadioButton currentRadioButton = (RadioButton) dialog.findViewById(R.id.currentRadio);
+		currentRadioButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// hide the row name edit field if the current row radio button
+				// is selected
+				nameEditText.setVisibility(View.GONE);
+				spinner.setVisibility(View.VISIBLE);
+			}
+
+		});
+		final RadioButton newRadioButton = (RadioButton) dialog.findViewById(R.id.newRadio);
+		newRadioButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// show the row name edit field if the new radio button is
+				// selected
+				nameEditText.setVisibility(View.VISIBLE);
+				nameEditText.requestFocus();
+				spinner.setVisibility(View.GONE);
+			}
+
+		});
+
 		List<String> list = new ArrayList<String>();
 		final ArrayList<RowInfo> rows = RowsTable.getRows(context);
 		if (rows != null) {
@@ -904,25 +938,50 @@ public class Dialogs {
 			@Override
 			public void onClick(View v) {
 				try {
-					if (rows != null) {
-						String selectedRow = (String) spinner.getSelectedItem();
-						int rowId = 0;
-						int rowPosition = 0;
-						for (RowInfo row : rows) {
-							if (row.getTitle().equals(selectedRow)) {
-								rowId = row.getId();
-								ArrayList<ItemInfo> items = ItemsTable.getItems(context, rowId);
-								rowPosition = items.size(); // in last position
-															// for selected row
-								break;
+					// if the new row radio button is selected, the user must
+					// enter
+					// a name for the new row
+					String rowName = nameEditText.getText().toString().trim();
+					if (newRadioButton.isChecked() && rowName.length() == 0) {
+						nameEditText.requestFocus();
+						displayAlert(context, context.getString(R.string.dialog_new_row_name_alert));
+						return;
+					}
+					boolean currentRow = !newRadioButton.isChecked();
+					int rowId = 0;
+					int rowPosition = 0;
+					if (currentRow) {
+						if (rows != null) {
+							String selectedRow = (String) spinner.getSelectedItem();
+							for (RowInfo row : rows) {
+								if (row.getTitle().equals(selectedRow)) {
+									rowId = row.getId();
+									ArrayList<ItemInfo> items = ItemsTable.getItems(context, rowId);
+									rowPosition = items.size(); // in last
+																// position
+																// for selected
+																// row
+									break;
+								}
 							}
 						}
-						Intent intent = new Intent(Intent.ACTION_VIEW);
-						intent.setData(Uri.parse(uri));
-						ItemsTable.insertItem(context, rowId, rowPosition, name, intent, icon, DatabaseHelper.SHORTCUT_TYPE);
-						Toast.makeText(context, context.getString(R.string.shortcut_installed, name), Toast.LENGTH_SHORT).show();
-						context.reloadGalleries(rowId);
+					} else {
+						rowId = (int) RowsTable.insertRow(context, rowName, 0, RowInfo.FAVORITE_TYPE);
+						rowPosition = 0;
 					}
+
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.parse(uri));
+					ItemsTable.insertItem(context, rowId, rowPosition, name, intent, icon, DatabaseHelper.SHORTCUT_TYPE);
+					Toast.makeText(context, context.getString(R.string.shortcut_installed, name), Toast.LENGTH_SHORT).show();
+					context.reloadAllGalleries();
+
+					if (currentRow) {
+						Analytics.logEvent(Analytics.ADD_SHORTCUT);
+					} else {
+						Analytics.logEvent(Analytics.ADD_SHORTCUT_WITH_ROW);
+					}
+
 				} catch (Exception e) {
 					Log.d(LOG_TAG, "onClick", e);
 				}
@@ -952,6 +1011,7 @@ public class Dialogs {
 		});
 		context.showCover(true);
 		dialog.show();
+		Analytics.logEvent(Analytics.DIALOG_ADD_SHORTCUT);
 	}
 
 }

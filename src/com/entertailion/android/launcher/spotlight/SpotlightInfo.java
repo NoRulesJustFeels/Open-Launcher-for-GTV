@@ -33,6 +33,7 @@ import com.entertailion.android.launcher.database.DatabaseHelper;
 import com.entertailion.android.launcher.database.ItemsTable;
 import com.entertailion.android.launcher.item.ItemInfo;
 import com.entertailion.android.launcher.utils.Analytics;
+import com.entertailion.android.launcher.utils.FastBitmapDrawable;
 import com.entertailion.android.launcher.utils.Utils;
 
 /**
@@ -113,7 +114,8 @@ public class SpotlightInfo extends ItemInfo {
 				FileInputStream fis = imageView.getContext().openFileInput(icon);
 				Bitmap bitmap = BitmapFactory.decodeStream(fis);
 				fis.close();
-				setDrawable(Utils.createIconThumbnail(new BitmapDrawable(bitmap), imageView.getContext()));
+				bitmap = Utils.createBitmapThumbnail(bitmap, imageView.getContext());
+				setDrawable(new FastBitmapDrawable(bitmap));
 				imageView.setImageDrawable(getDrawable());
 				return;
 			} catch (Exception e) {

@@ -36,6 +36,11 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -475,7 +480,7 @@ public class Utils {
 			paint.setAntiAlias(true);
 			c.drawBitmap(myBitmap, (size - myBitmap.getWidth()) / 2, (size - myBitmap.getHeight()) / 2, paint);
 			return b;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.e(LOG_TAG, "Faild to get the image from URL:" + src, e);
 			return null;
 		}
@@ -584,6 +589,31 @@ public class Utils {
 		}
 	}
 
+	public static void showSystemSettings(Context context) {
+		String settingsAction = "android.settings.SETTINGS";
+		if (Utils.isVizioCoStar()) {
+			// Vizio has a custom system settings app
+			settingsAction = "viaplus.intent.settings.SETTINGS";
+		}
+
+		PackageManager manager = context.getPackageManager();
+
+		Intent systemIntent = new Intent(settingsAction, null);
+
+		final List<ResolveInfo> activities = manager.queryIntentActivities(systemIntent, 0);
+
+		if (activities.size() > 0) {
+			ResolveInfo info = activities.get(0);
+			Intent intent = new Intent(Intent.ACTION_MAIN);
+			intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			intent.setComponent(new ComponentName(info.activityInfo.applicationInfo.packageName, info.activityInfo.name));
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			context.startActivity(intent);
+		} else {
+			Log.w(LOG_TAG, "no systems activity");
+		}
+	}
+
 	public static boolean isUsa() {
 		return Locale.getDefault().equals(Locale.US);
 	}
@@ -662,15 +692,16 @@ public class Utils {
 					Log.e(LOG_TAG, "Error getData: " + url, e);
 				}
 			}
-
-			try {
-				FileOutputStream fos = context.openFileOutput(cleanUrl, Context.MODE_PRIVATE);
-				fos.write(data.getBytes());
-				fos.close();
-			} catch (FileNotFoundException e) {
-				Log.e(LOG_TAG, "Error getData: " + url, e);
-			} catch (IOException e) {
-				Log.e(LOG_TAG, "Error getData: " + url, e);
+			if (data != null && data.trim().length() > 0) {
+				try {
+					FileOutputStream fos = context.openFileOutput(cleanUrl, Context.MODE_PRIVATE);
+					fos.write(data.getBytes());
+					fos.close();
+				} catch (FileNotFoundException e) {
+					Log.e(LOG_TAG, "Error getData: " + url, e);
+				} catch (IOException e) {
+					Log.e(LOG_TAG, "Error getData: " + url, e);
+				}
 			}
 		}
 		return data;
@@ -719,6 +750,63 @@ public class Utils {
 		drawable.draw(canvas);
 
 		return bitmap;
+	}
+
+	public static String getWebSiteIcon(Context context, String url) {
+		String icon = null;
+		if (url != null) {
+			String data = Utils.getCachedData(context, url, true);
+			if (data != null) {
+				Document doc = Jsoup.parse(data);
+				if (doc != null) {
+					String href = null;
+					// Find the Microsoft tile icon
+					Elements metas = doc.select("meta[name=msapplication-TileImage]");
+					if (metas.size() > 0) {
+						Element meta = metas.first();
+						href = meta.attr("abs:content");
+					}
+					if (href == null) {
+						// Find the Apple touch icon
+						Elements links = doc.select("link[rel=apple-touch-icon]");
+						if (links.size() > 0) {
+							Element link = links.first();
+							href = link.attr("abs:href");
+						}
+					}
+					if (href != null) {
+						try {
+							Bitmap bitmap = Utils.getBitmapFromURL(href);
+							icon = "web_site_icon_" + Utils.clean(href) + ".png";
+							Utils.saveToFile(context, bitmap, bitmap.getWidth(), bitmap.getHeight(), icon);
+							bitmap.recycle();
+						} catch (IOException e) {
+							Log.d(LOG_TAG, "getWebSiteIcon", e);
+						}
+					}
+				}
+			}
+		}
+		return icon;
+	}
+	
+	public static void launchLiveTV(Context context) {
+		Log.d(LOG_TAG, "launchLiveTV");
+		PackageManager manager = context.getPackageManager();
+		Intent notificationIntent = new Intent("com.google.android.tv.intent.action.TV", null);
+		notificationIntent.addCategory(Intent.CATEGORY_DEFAULT);
+
+		final List<ResolveInfo> activities = manager.queryIntentActivities(notificationIntent, 0);
+		if (activities.size() > 0) {
+			// Intent { act=android.intent.action.VIEW dat=tv://passthrough flg=0x10200000 cmp=com.google.tv.player/.PlayerActivity }
+			ResolveInfo info = activities.get(0);
+			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tv://passthrough"));
+			intent.setComponent(new ComponentName(info.activityInfo.applicationInfo.packageName, info.activityInfo.name));
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			context.startActivity(intent);
+		} else {
+			Log.w(LOG_TAG, "no live TV activity");
+		}
 	}
 
 }

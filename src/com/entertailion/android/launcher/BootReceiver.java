@@ -34,6 +34,7 @@ public class BootReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Log.d(LOG_CAT, "bootReciever.onReciever");
 		try {
 			context.startService(new Intent(context, LauncherService.class));
 		} catch (Exception e) {

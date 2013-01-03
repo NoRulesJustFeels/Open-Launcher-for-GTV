@@ -58,6 +58,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int VIRTUAL_ALL_APPS_TYPE = VIRTUAL_APP_TYPE + 1;
 	public static final int VIRTUAL_BROWSER_BOOKMARKS_TYPE = VIRTUAL_APP_TYPE + 2;
 	public static final int VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE = VIRTUAL_APP_TYPE + 3;
+	public static final int VIRTUAL_LIVE_TV = VIRTUAL_APP_TYPE + 4;
 
 	private Context context;
 
@@ -192,6 +193,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseHelper.ROW_ID_COLUMN, itemsRowId);
 			values.put(DatabaseHelper.POSITION_COLUMN, 1);
+			values.put(DatabaseHelper.TITLE_COLUMN, context.getString(R.string.live_tv));
+			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_LIVE_TV);
+			db.insertOrThrow(DatabaseHelper.ITEMS_TABLE, DatabaseHelper.TITLE_COLUMN, values);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "populateItemsTable", e);
+		}
+		try {
+			ContentValues values = new ContentValues();
+			values.put(DatabaseHelper.ROW_ID_COLUMN, itemsRowId);
+			values.put(DatabaseHelper.POSITION_COLUMN, 2);
 			values.put(DatabaseHelper.TITLE_COLUMN, context.getString(R.string.all_apps));
 			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_ALL_APPS_TYPE);
 			db.insertOrThrow(DatabaseHelper.ITEMS_TABLE, DatabaseHelper.TITLE_COLUMN, values);
@@ -201,7 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		try {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseHelper.ROW_ID_COLUMN, itemsRowId);
-			values.put(DatabaseHelper.POSITION_COLUMN, 2);
+			values.put(DatabaseHelper.POSITION_COLUMN, 3);
 			values.put(DatabaseHelper.TITLE_COLUMN, context.getString(R.string.bookmarks));
 			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_BROWSER_BOOKMARKS_TYPE);
 			db.insertOrThrow(DatabaseHelper.ITEMS_TABLE, DatabaseHelper.TITLE_COLUMN, values);
@@ -211,7 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		try {
 			ContentValues values = new ContentValues();
 			values.put(DatabaseHelper.ROW_ID_COLUMN, itemsRowId);
-			values.put(DatabaseHelper.POSITION_COLUMN, 3);
+			values.put(DatabaseHelper.POSITION_COLUMN, 4);
 			values.put(DatabaseHelper.TITLE_COLUMN, context.getString(R.string.spotlight_web_apps));
 			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE);
 			db.insertOrThrow(DatabaseHelper.ITEMS_TABLE, DatabaseHelper.TITLE_COLUMN, values);

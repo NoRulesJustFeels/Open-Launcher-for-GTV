@@ -78,6 +78,8 @@ public class HttpRequestHelper {
 		HttpConnectionParams.setSoTimeout(params, 60000);
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		HttpProtocolParams.setContentCharset(params, HTTP.DEFAULT_CONTENT_CHARSET);
+		HttpProtocolParams.setUserAgent(params,
+				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.5 Safari/537.22");
 
 		SchemeRegistry schReg = new SchemeRegistry();
 		schReg.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));

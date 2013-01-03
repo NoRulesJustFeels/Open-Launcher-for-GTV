@@ -157,7 +157,7 @@ public class LauncherApplication extends Application {
 		if (locationData == null) {
 			locationData = Utils.getLocationData(this);
 		}
-		if (locationData != null && locationData.getLatitude()!=0.0d && locationData.getLongitude()!=0.0d) {
+		if (locationData != null && locationData.getLatitude() != 0.0d && locationData.getLongitude() != 0.0d) {
 			persistLocationData();
 		} else {
 			retrieveLocationData();
@@ -194,8 +194,8 @@ public class LauncherApplication extends Application {
 		try {
 			if (settings.getString(WEATHER_LONGITUDE, null) != null) {
 				locationData = new LocationData();
-				locationData.setLongitude(Integer.parseInt(settings.getString(WEATHER_LONGITUDE, null)));
-				locationData.setLatitude(Integer.parseInt(settings.getString(WEATHER_LATITUDE, null)));
+				locationData.setLongitude(Double.parseDouble(settings.getString(WEATHER_LONGITUDE, null)));
+				locationData.setLatitude(Double.parseDouble(settings.getString(WEATHER_LATITUDE, null)));
 				locationData.setZipcode(settings.getString(WEATHER_ZIPCODE, null));
 				locationData.setCountryName(settings.getString(WEATHER_COUNTRY_NAME, null));
 				locationData.setCountryCode(settings.getString(WEATHER_COUNTRY_CODE, null));
@@ -371,7 +371,7 @@ public class LauncherApplication extends Application {
 				// Remove app from recents
 				ArrayList<ApplicationInfo> persistedRecents = RecentAppsTable.getAllRecentApps(context);
 				if (persistedRecents != null) {
-					for(ApplicationInfo applicationInfo:persistedRecents) {
+					for (ApplicationInfo applicationInfo : persistedRecents) {
 						if (applicationInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
 							try {
 								RecentAppsTable.deleteRecentApp(context, applicationInfo.getId());

@@ -18,12 +18,9 @@ package com.entertailion.android.launcher.shortcut;
 
 import java.util.ArrayList;
 
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent.ShortcutIconResource;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -32,17 +29,10 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.entertailion.android.launcher.Launcher;
 import com.entertailion.android.launcher.R;
-import com.entertailion.android.launcher.database.DatabaseHelper;
 import com.entertailion.android.launcher.database.ItemsTable;
 import com.entertailion.android.launcher.database.RowsTable;
 import com.entertailion.android.launcher.item.ItemInfo;
@@ -68,7 +58,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
 	 *      android.content.Intent)
 	 */
-	public void onReceive(Context context, Intent data) {
+	public void onReceive(final Context context, Intent data) {
 		if (!ACTION_INSTALL_SHORTCUT.equals(data.getAction())) {
 			return;
 		}
@@ -76,7 +66,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 		final PackageManager packageManager = context.getPackageManager();
 
 		// get the shortcut data
-		Intent intent = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
+		final Intent intent = data.getParcelableExtra(Intent.EXTRA_SHORTCUT_INTENT);
 		if (intent.getAction() == null) {
 			intent.setAction(Intent.ACTION_VIEW);
 		}
@@ -131,8 +121,9 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 									&& info.getIntent().getComponent().getClassName().equals(intent.getComponent().getClassName())) {
 								exists = true;
 								break;
-							} else if (info.getIntent().getScheme().equals(intent.getScheme())
-									&& info.getIntent().getDataString().equals(intent.getDataString())) {
+							} else if (info.getIntent().getScheme() != null && intent.getScheme() != null
+									&& info.getIntent().getScheme().equals(intent.getScheme()) && info.getIntent().getDataString() != null
+									&& intent.getDataString() != null && info.getIntent().getDataString().equals(intent.getDataString())) {
 								exists = true;
 								break;
 							} else if (info.getIntent().toUri(Intent.URI_INTENT_SCHEME).equals(intent.toUri(Intent.URI_INTENT_SCHEME))) {
@@ -154,13 +145,25 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 					filename = "shortcut_" + Utils.clean(intent.toString()) + ".png";
 					Utils.saveToFile(context, Utils.drawableToBitmap(drawable), drawable.getBounds().width(), drawable.getBounds().height(), filename);
 				}
-				// Invoke main launcher activity to let the user pick the row to
-				// add the shortcut
-				Intent launcherIntent = new Intent(Launcher.SHORTCUTS_INTENT, intent.getData(), context, Launcher.class);
-				launcherIntent.putExtra("icon", filename);
-				launcherIntent.putExtra("name", name);
-				launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(launcherIntent);
+
+				final String intentIcon = filename;
+				final String intentName = name;
+				new Thread(new Runnable() {
+					public void run() {
+						String biggerIcon = null;
+						if (intent.getData() != null && intent.getDataString().startsWith("http")) {
+							biggerIcon = Utils.getWebSiteIcon(context, intent.getDataString());
+						}
+						// Invoke main launcher activity to let the user pick
+						// the row to
+						// add the shortcut
+						Intent launcherIntent = new Intent(Launcher.SHORTCUTS_INTENT, intent.getData(), context, Launcher.class);
+						launcherIntent.putExtra("icon", biggerIcon == null ? intentIcon : biggerIcon);
+						launcherIntent.putExtra("name", intentName);
+						launcherIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(launcherIntent);
+					}
+				}).start();
 			} catch (Exception e) {
 				Log.e(LOG_TAG, "onReceive", e);
 				Toast.makeText(context, context.getString(R.string.shortcut_not_installed, name), Toast.LENGTH_SHORT).show();
@@ -195,6 +198,8 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 						// extract the channel number
 						return uri.getQueryParameter("channelNumber");
 					}
+				} else if (uri.getScheme().equals("http")) {
+					return uri.getHost().toUpperCase();
 				}
 			} catch (Exception e) {
 				Log.d(LOG_TAG, "extractChannelInfo: " + data, e);

@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -30,6 +29,7 @@ import com.entertailion.android.launcher.database.DatabaseHelper;
 import com.entertailion.android.launcher.database.ItemsTable;
 import com.entertailion.android.launcher.item.ItemInfo;
 import com.entertailion.android.launcher.utils.Analytics;
+import com.entertailion.android.launcher.utils.FastBitmapDrawable;
 import com.entertailion.android.launcher.utils.Utils;
 
 /**
@@ -81,7 +81,8 @@ public class ShortcutInfo extends ItemInfo {
 				FileInputStream fis = imageView.getContext().openFileInput(icon);
 				Bitmap bitmap = BitmapFactory.decodeStream(fis);
 				fis.close();
-				setDrawable(Utils.createIconThumbnail(new BitmapDrawable(bitmap), imageView.getContext()));
+				bitmap = Utils.createBitmapThumbnail(bitmap, imageView.getContext());
+				setDrawable(new FastBitmapDrawable(bitmap));
 				imageView.setImageDrawable(getDrawable());
 				return;
 			} catch (Exception e) {

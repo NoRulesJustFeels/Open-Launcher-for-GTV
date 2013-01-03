@@ -96,6 +96,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private static final int MENU_DELETE_ITEM = MENU_ADD_SPOTLIGHT_WEB_APP + 1;
 	private static final int MENU_DELETE_ROW = MENU_DELETE_ITEM + 1;
 	private static final int MENU_UNINSTALL_APP = MENU_DELETE_ROW + 1;
+	private static final int MENU_SYSTEM_SETTINGS = MENU_UNINSTALL_APP + 1;
 
 	private static final int UPDATE_ITEM_STATUS = 1;
 
@@ -202,16 +203,21 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	 * @param intent
 	 */
 	private void handleIntent(Intent intent) {
-		Log.d(LOG_TAG, "handleIntent");
+		Log.d(LOG_TAG, "handleIntent: "+intent);
 		if (intent != null && intent.getAction() != null) {
 			if (intent.getAction().equals(SHORTCUTS_INTENT)) {
 				if (intent.getExtras() != null) {
 					String name = intent.getExtras().getString("name");
 					String icon = intent.getExtras().getString("icon");
 					String uri = intent.getDataString();
-					Dialogs.displayShortcutsRowSelection(this, name, icon, uri);
+					Dialogs.displayShortcutsRowSelection(Launcher.this, name, icon, uri);
+					return;
 				}
 			}
+		}
+		if (intent.getFlags()==(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)) {  // boot up  0x10800000
+			Utils.launchLiveTV(this);
+			finish();
 		}
 	}
 
@@ -274,16 +280,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		super.onResume();
 
 		// Reset the user interface components
-		scrollViewContent.removeAllViews();
-		recentsGallery = null;
-		currentGalleryRow = 0;
-		updateUserInterface();
-		bindItems();
-		((LauncherApplication) getApplicationContext()).loadRecents();
-		bindRecents();
-		updateStatus();
-		scrollView.scrollTo(0, 0);
-		scrollView.resetScroll();
+		reloadAllGalleries();
 
 		// For first time install show the introduction dialog with some user
 		// instructions
@@ -649,6 +646,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			menu.add(0, MENU_UNINSTALL_APP, 0, R.string.menu_uninstall_app).setIcon(android.R.drawable.ic_notification_clear_all);
 		}
 		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings).setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('S');
+		menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_system_settings).setIcon(android.R.drawable.ic_menu_preferences);
 		menu.add(0, MENU_ABOUT, 0, R.string.menu_about).setIcon(android.R.drawable.ic_menu_info_details).setAlphabeticShortcut('A');
 	}
 
@@ -687,6 +685,10 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			Intent intent = new Intent(this, PreferencesActivity.class);
 			startActivity(intent);
 			Analytics.logEvent(Analytics.SETTINGS);
+			return true;
+		case MENU_SYSTEM_SETTINGS:
+			Utils.showSystemSettings(this);
+			Analytics.logEvent(Analytics.SYSTEM_SETTINGS);
 			return true;
 		}
 		return false;
@@ -1007,8 +1009,6 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	/**
 	 * Reload the item data for a row.
 	 * 
-	 * @see InstallShortcutReceiver
-	 * 
 	 * @param rowId
 	 */
 	public void reloadGalleries(int rowId) {
@@ -1026,6 +1026,22 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * Reload the data for all the rows.
+	 */
+	public void reloadAllGalleries() {
+		scrollViewContent.removeAllViews();
+		recentsGallery = null;
+		currentGalleryRow = 0;
+		updateUserInterface();
+		bindItems();
+		((LauncherApplication) getApplicationContext()).loadRecents();
+		bindRecents();
+		updateStatus();
+		scrollView.scrollTo(0, 0);
+		scrollView.resetScroll();
 	}
 
 	/**

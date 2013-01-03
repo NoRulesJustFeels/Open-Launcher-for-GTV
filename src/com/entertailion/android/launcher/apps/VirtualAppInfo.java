@@ -77,6 +77,9 @@ public class VirtualAppInfo extends ItemInfo {
 		case DatabaseHelper.VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE:
 			Dialogs.displayAllSpotlight(context);
 			return;
+		case DatabaseHelper.VIRTUAL_LIVE_TV:
+			Utils.launchLiveTV(context);
+			return;
 		}
 	}
 
@@ -95,6 +98,9 @@ public class VirtualAppInfo extends ItemInfo {
 				return;
 			case DatabaseHelper.VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE:
 				imageView.setImageResource(R.drawable.spotlight);
+				return;
+			case DatabaseHelper.VIRTUAL_LIVE_TV:
+				imageView.setImageResource(R.drawable.livetv);
 				return;
 			}
 		}
