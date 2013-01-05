@@ -18,10 +18,11 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Home -->
-    <string name="home_title">Open Launcher for GTV</string>
+    <string name="home_title">Open Launcher</string>
     <string name="show_all_apps">All</string>
     <string name="notifications">Notifications</string>
     <string name="bookmarks">Browser Bookmarks</string>
+    <string name="browser_history">Browser History</string>
     <string name="all_apps">All Apps</string>
     <string name="spotlight_web_apps">Spotlight Web Apps</string>
     <string name="live_tv">Live TV</string>
@@ -37,6 +38,8 @@
     <string name="menu_delete_item">Delete Item</string>
     <string name="menu_delete_row">Delete Row</string>
     <string name="menu_uninstall_app">Uninstall App</string>
+    <string name="menu_move_item">Move Item</string>
+    <string name="menu_move_item_instuctions">Use the left and right arrow buttons to move and press OK to select the new position.</string>
 
     <!-- Layers -->
     <string name="layer_all_apps">ALL APPS</string>
@@ -66,12 +69,12 @@
     <string name="about_button_web_url">https://github.com/entertailion/Open-Launcher-for-GTV</string>
     <string name="about_button_more_apps">More Apps</string>
     <string name="about_button_more_apps_url">https://play.google.com/store/apps/developer?id=ENTERTAILION+LLC</string>
-    <string name="about_version_title">Version: %s</string>
+    <string name="about_version_title">Open Launcher %s</string>
     <string name="about_button_feedback">Feedback</string>
     <string name="about_button_feedback_email">openlauncher@entertailion.com</string>
     <string name="about_copyright">\u00A9 2013 ENTERTAILION LLC. All other trademarks and copyrights are property of their respective owners. All rights reserved.</string>
     <string name="unknown_build">Unknown</string>
-    <string name="about_instructions">Press the Menu button to invoke the launcher. You might have to clear the existing default launcher: Settings/Applications/Manage applications/Home/Clear defaults</string>
+    <string name="about_instructions">Press the Home button to invoke the launcher. You might have to clear the existing default launcher using the system Settings app: Go to Applications/Manage applications/Home, then click the Clear defaults button.</string>
     <string name="about_button_uninstall">Uninstall</string>
 
     <!-- Introduction -->

@@ -48,13 +48,11 @@ public class MainActivity extends Activity {
 
 		TextView aboutTextView = (TextView) findViewById(R.id.about_text1);
 		aboutTextView.setTypeface(lightTypeface);
+		aboutTextView.setText(getString(R.string.about_version_title, Utils.getVersion(this)));
 		TextView copyrightTextView = (TextView) findViewById(R.id.copyright_text);
 		copyrightTextView.setTypeface(lightTypeface);
 		TextView feedbackTextView = (TextView) findViewById(R.id.feedback_text);
 		feedbackTextView.setTypeface(lightTypeface);
-		TextView versionTextView = (TextView) findViewById(R.id.version_text);
-		versionTextView.setTypeface(lightTypeface);
-		versionTextView.setText(getString(R.string.about_version_title, Utils.getVersion(this)));
 
 		((Button) findViewById(R.id.button_web)).setOnClickListener(new OnClickListener() {
 

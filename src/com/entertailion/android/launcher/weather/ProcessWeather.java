@@ -33,7 +33,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.entertailion.android.launcher.LauncherApplication;
-import com.entertailion.android.launcher.utils.HttpRequestHelper;
 import com.entertailion.android.launcher.utils.LocationData;
 import com.entertailion.android.launcher.utils.Utils;
 
@@ -69,7 +68,10 @@ public class ProcessWeather implements Runnable {
 			final String queryString = NOAA_URL + "&lat=" + latitudeValue + "&lon=" + longitudeValue; // http://forecast.weather.gov/MapClick.php?FcstType=dwml&lat=33.07871627807617&lon=-96.80830383300781
 			// String queryString =
 			// "http://forecast.weather.gov/MapClick.php?FcstType=dwml&lat=33.086936950683594&lon=-96.7601089477539";
+			// String queryString =
+			// "http://forecast.weather.gov/MapClick.php?FcstType=dwml&lat=30.1011833&lon=-89.99067339999999";
 			String data = Utils.getCachedData(context, queryString, true);
+			// data = Utils.readAssetFile(context, "weather.xml"); // testing
 			InputSource inStream = new org.xml.sax.InputSource();
 			inStream.setCharacterStream(new StringReader(data));
 			SAXParserFactory spf = SAXParserFactory.newInstance();

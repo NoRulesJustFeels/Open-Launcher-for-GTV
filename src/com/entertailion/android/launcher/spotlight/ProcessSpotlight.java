@@ -129,10 +129,14 @@ public class ProcessSpotlight implements Runnable {
 								// create a file-based icon from original
 								// 360x203
 								Bitmap bitmap = Utils.getBitmapFromURL(logo);
-								bitmap = Utils.crop(bitmap, 30, 30);
-								Utils.saveToFile(context, bitmap, 100, 100, icon);
-								bitmap.recycle();
-								bitmap = null;
+								if (bitmap!=null) {
+									bitmap = Utils.crop(bitmap, 30, 30);
+									Utils.saveToFile(context, bitmap, 100, 100, icon);
+									bitmap.recycle();
+									bitmap = null;
+								} else {
+									icon = null;
+								}
 							}
 						} catch (Exception e) {
 							Log.e(LOG_TAG, "create spotlight icon", e);

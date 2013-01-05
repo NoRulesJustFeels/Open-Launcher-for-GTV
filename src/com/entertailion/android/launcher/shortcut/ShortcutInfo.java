@@ -16,6 +16,8 @@
 package com.entertailion.android.launcher.shortcut;
 
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.entertailion.android.launcher.Launcher;
+import com.entertailion.android.launcher.R;
 import com.entertailion.android.launcher.database.DatabaseHelper;
 import com.entertailion.android.launcher.database.ItemsTable;
 import com.entertailion.android.launcher.item.ItemInfo;
@@ -76,6 +79,12 @@ public class ShortcutInfo extends ItemInfo {
 			return;
 		}
 
+		Integer resource = networkIconMap.get(getTitle().toUpperCase());
+		if (null != resource) {
+			imageView.setImageResource(resource);
+			return;
+		}
+
 		if (icon != null) {
 			try {
 				FileInputStream fis = imageView.getContext().openFileInput(icon);
@@ -106,5 +115,32 @@ public class ShortcutInfo extends ItemInfo {
 	@Override
 	public String toString() {
 		return "Shortcut [title=" + getTitle() + ", intent=" + getIntent() + ", icon=" + getIcon() + "]";
+	}
+
+	/**
+	 * Cache of local copies of the icons for the USA TV networks. The icons
+	 * have been resized/clipped to fit in the gallery views.
+	 */
+	public static Map<String, Integer> networkIconMap = new HashMap<String, Integer>();
+	static {
+		networkIconMap.put("ABC", R.drawable.channel_abc);
+		networkIconMap.put("CBS", R.drawable.channel_cbs);
+		networkIconMap.put("FOX", R.drawable.channel_fox);
+		networkIconMap.put("NBC", R.drawable.channel_nbc);
+		networkIconMap.put("PBS", R.drawable.channel_pbs);
+		networkIconMap.put("UNIVISION", R.drawable.channel_univision);
+		networkIconMap.put("CW", R.drawable.channel_cw);
+		networkIconMap.put("THE CW NETWORK", R.drawable.channel_cw);
+		networkIconMap.put("MY NETWORK TV", R.drawable.channel_mynetwork);
+		networkIconMap.put("MY NETWORK", R.drawable.channel_mynetwork);
+		networkIconMap.put("MYNETWORK TV", R.drawable.channel_mynetwork);
+		networkIconMap.put("MYNETWORKTV", R.drawable.channel_mynetwork);
+		networkIconMap.put("MYTV", R.drawable.channel_mynetwork);
+		networkIconMap.put("ION", R.drawable.channel_ion);
+		networkIconMap.put("TRINITY BROADCASTING NETWORK", R.drawable.channel_tbn);
+		networkIconMap.put("TBN", R.drawable.channel_tbn);
+		networkIconMap.put("TELEMUNDO", R.drawable.channel_telemundo);
+		networkIconMap.put("TELEFUTURA", R.drawable.channel_telefutura);
+		networkIconMap.put("DAYSTAR", R.drawable.channel_daystar);
 	}
 }

@@ -154,6 +154,7 @@ public class SpotlightInfo extends ItemInfo {
 		spotlightIconMap.put("amos tv", R.drawable.spotlight_amostv);
 		spotlightIconMap.put("asian crush", R.drawable.spotlight_asiancrush);
 		spotlightIconMap.put("baeble music", R.drawable.spotlight_baeblemusic);
+		spotlightIconMap.put("bg live tv", R.drawable.spotlight_bglive);
 		spotlightIconMap.put("blip.tv", R.drawable.spotlight_bliptv);
 		spotlightIconMap.put("c-span video library", R.drawable.spotlight_cspanvideolibrary);
 		spotlightIconMap.put("cartoon network", R.drawable.spotlight_cartoonnetwork);

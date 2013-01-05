@@ -221,10 +221,10 @@ public class NoaaWeatherHandler extends DefaultHandler {
 			if (in_forecast_information) {
 				String timePeriod = chars.toString();
 				String date = timePeriod.substring(0, 10);
-				if (tomorrow.equals(date) && timePeriod.endsWith("00:00:00-05:00")) {
+				if (tomorrow.equals(date) && (timePeriod.endsWith("00:00:00-05:00") || timePeriod.endsWith("00:00:00-06:00"))) {
 					dayMapping.add("Overnight");
 				} else if (today.equals(date)) {
-					if (timePeriod.endsWith("18:00:00-05:00")) {
+					if (timePeriod.endsWith("18:00:00-05:00") || timePeriod.endsWith("18:00:00-06:00")) {
 						dayMapping.add("Tonight");
 					} else {
 						dayMapping.add("Today");
@@ -234,7 +234,7 @@ public class NoaaWeatherHandler extends DefaultHandler {
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(sdf.parse(date));
 						String day = DateUtils.getDayOfWeekString(cal.get(Calendar.DAY_OF_WEEK), DateUtils.LENGTH_LONG);
-						if (timePeriod.endsWith("18:00:00-05:00")) {
+						if (timePeriod.endsWith("18:00:00-05:00") || timePeriod.endsWith("18:00:00-06:00")) {
 							day = day + " Night";
 						}
 						dayMapping.add(day);

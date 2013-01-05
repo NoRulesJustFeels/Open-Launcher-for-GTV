@@ -18,6 +18,7 @@ package com.entertailion.android.launcher.item;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.entertailion.android.launcher.widget.GalleryAdapter;
@@ -29,14 +30,20 @@ import com.entertailion.android.launcher.widget.GalleryAdapter;
  * 
  */
 public class ItemAdapter extends GalleryAdapter<ItemInfo> {
+	
+	private static final String LOG_TAG = "ItemAdapter";
 
 	public ItemAdapter(Context context, ArrayList<ItemInfo> apps, boolean infiniteScrolling) {
 		super(context, apps, infiniteScrolling);
 	}
 
 	protected void updateView(ImageView imageView, int position) {
-		ItemInfo info = getItem(position);
+		try {
+			ItemInfo info = getItem(position);
 
-		info.renderIcon(imageView);
+			info.renderIcon(imageView);
+		} catch (Exception e) {
+			Log.d(LOG_TAG, "updateView", e);
+		}
 	}
 }

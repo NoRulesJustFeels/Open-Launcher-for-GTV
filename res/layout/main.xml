@@ -49,13 +49,6 @@
                 android:padding="2dip" >
 
                 <TextView
-                    android:id="@+id/version_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="18sp" />
-
-                <TextView
                     android:id="@+id/feedback_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -23,7 +23,7 @@ Open-Launcher-for-GTV
 <ul>
 <li>To add an app: Use the D-pad arrow keys to select any row other than the "Recent Apps" row. Press Menu and select "Add App". You can select the current row or enter the name for a new row. Then select the app you want to add.</li>
 <li>To add a Spotlight web app: Select any row other than the "Recent Apps" row. Press Menu and select "Add Spotlight Web App". You can select the current row or enter the name for a new row. Then select the web app you want to add.</li>
-<li>To add a TV channel as a favorite: Go to live TV, press Menu, select Save and then "Add channel to home screen". Type in the channel number or name. Select the channel from the list and press OK.</li>
+<li>To add a TV channel as a favorite (Google TV only provides channel data for USA): Go to live TV, press Menu, select Save and then "Add channel to home screen". Type in the channel number or name. Select the channel from the list and press OK.</li>
 <li>To add a web site as a favorite: Load the site in the Chrome browser. Press Menu, select Save and then "Add to home screen". Confirm the web site details and select the OK button.</li>
 <li>To add a web site to bookmarks: Add bookmark in Chrome and then use Bookmarks app.</li>
 <li>To uninstall an app: Select All Apps, then long click on the app you want to uninstall.</li>

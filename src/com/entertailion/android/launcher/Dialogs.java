@@ -27,6 +27,8 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.Browser;
@@ -65,6 +67,7 @@ import com.entertailion.android.launcher.shortcut.InstallShortcutReceiver;
 import com.entertailion.android.launcher.spotlight.AllSpotlightAdapter;
 import com.entertailion.android.launcher.spotlight.SpotlightInfo;
 import com.entertailion.android.launcher.utils.Analytics;
+import com.entertailion.android.launcher.utils.FastBitmapDrawable;
 import com.entertailion.android.launcher.utils.Utils;
 
 /**
@@ -81,6 +84,7 @@ public class Dialogs {
 	public static final String DATE_FIRST_LAUNCHED = "date_first_launched";
 	public static final String DONT_SHOW_RATING_AGAIN = "dont_show_rating_again";
 	private final static int DAYS_UNTIL_PROMPT = 5;
+	private final static int BROWSER_HISTORY_LIMIT = 20;
 
 	// Shared OnKeyListener for list/grid views
 	private static OnKeyListener onKeyListener = new OnKeyListener() {
@@ -185,13 +189,11 @@ public class Dialogs {
 
 		TextView aboutTextView = (TextView) dialog.findViewById(R.id.about_text1);
 		aboutTextView.setTypeface(lightTypeface);
+		aboutTextView.setText(context.getString(R.string.about_version_title, Utils.getVersion(context)));
 		TextView copyrightTextView = (TextView) dialog.findViewById(R.id.copyright_text);
 		copyrightTextView.setTypeface(lightTypeface);
 		TextView feedbackTextView = (TextView) dialog.findViewById(R.id.feedback_text);
 		feedbackTextView.setTypeface(lightTypeface);
-		TextView versionTextView = (TextView) dialog.findViewById(R.id.version_text);
-		versionTextView.setTypeface(lightTypeface);
-		versionTextView.setText(context.getString(R.string.about_version_title, Utils.getVersion(context)));
 
 		((Button) dialog.findViewById(R.id.button_web)).setOnClickListener(new OnClickListener() {
 
@@ -332,6 +334,13 @@ public class Dialogs {
 		bookmarks.setTitle(context.getString(R.string.bookmarks));
 		bookmarks.setDrawable(context.getResources().getDrawable(R.drawable.bookmarks));
 		apps.add(bookmarks);
+		
+		// add browser history as a virtual app
+		VirtualAppInfo browserHistory = new VirtualAppInfo();
+		browserHistory.setType(DatabaseHelper.VIRTUAL_BROWSER_HISTORY_TYPE);
+		browserHistory.setTitle(context.getString(R.string.browser_history));
+		browserHistory.setDrawable(context.getResources().getDrawable(R.drawable.browser_history));
+		apps.add(browserHistory);
 
 		if (addAllApps) {
 			// add all apps as a virtual app
@@ -351,7 +360,7 @@ public class Dialogs {
 
 		// add live TV as a virtual app
 		VirtualAppInfo liveTV = new VirtualAppInfo();
-		liveTV.setType(DatabaseHelper.VIRTUAL_LIVE_TV);
+		liveTV.setType(DatabaseHelper.VIRTUAL_LIVE_TV_TYPE);
 		liveTV.setTitle(context.getString(R.string.live_tv));
 		liveTV.setDrawable(context.getResources().getDrawable(R.drawable.livetv));
 		apps.add(liveTV);
@@ -428,11 +437,6 @@ public class Dialogs {
 		if (cursor != null) {
 			cursor.moveToFirst();
 			if (cursor.moveToFirst() && cursor.getCount() > 0) {
-				if (bookmarks == null) {
-					bookmarks = new ArrayList<BookmarkInfo>();
-				}
-				bookmarks.clear();
-
 				while (cursor.isAfterLast() == false) {
 					String bookmarkIndex = cursor.getString(Browser.HISTORY_PROJECTION_BOOKMARK_INDEX);
 					if (bookmarkIndex.equals("1")) {
@@ -442,23 +446,99 @@ public class Dialogs {
 						String url = cursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX);
 						bookmark.setUrl(url);
 
-						// for some reason the favicons aren't good looking
-						// images
-						// byte[] data = cursor
-						// .getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX);
-						// if (data != null) {
-						// try {
-						// Bitmap bitmap = BitmapFactory.decodeByteArray(
-						// data, 0, data.length);
-						// bookmark.setDrawable(new BitmapDrawable(bitmap));
-						// } catch (Exception e) {
-						// Log.e(LOG_TAG, "bookmark icon", e);
-						// }
-						// }
+						// for some reason the favicons aren't good looking images
+//						byte[] data = cursor.getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX);
+//						if (data != null) {
+//							try {
+//								Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//								bookmark.setDrawable(new FastBitmapDrawable(bitmap));
+//							} catch (Exception e) {
+//								Log.e(LOG_TAG, "bookmark icon", e);
+//							}
+//						}
 						bookmarks.add(bookmark);
 					}
 
 					cursor.moveToNext();
+				}
+			}
+		}
+		return bookmarks;
+	}
+	
+	/**
+	 * Display the list of browser history.
+	 * 
+	 * @param context
+	 */
+	public static void displayBrowserHistory(final Launcher context) {
+		final Dialog dialog = new Dialog(context);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.bookmarks_list);
+
+		ListView listView = (ListView) dialog.findViewById(R.id.list);
+		final ArrayList<BookmarkInfo> bookmarks = loadBrowserHistory(context);
+		listView.setAdapter(new BookmarkAdapter(context, bookmarks));
+		listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
+				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
+				context.startActivity(browserIntent);
+				context.showCover(false);
+				dialog.dismiss();
+				Analytics.logEvent(Analytics.INVOKE_BOOKMARK);
+			}
+
+		});
+		listView.setDrawingCacheEnabled(true);
+		listView.setOnKeyListener(onKeyListener);
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				context.showCover(false);
+			}
+
+		});
+		context.showCover(true);
+		dialog.show();
+		Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
+	}
+	
+	/**
+	 * Utility method to load the list of browser history.
+	 */
+	private static ArrayList<BookmarkInfo> loadBrowserHistory(Launcher context) {
+		ArrayList<BookmarkInfo> bookmarks = new ArrayList<BookmarkInfo>();
+
+		Cursor cursor = context.managedQuery(Browser.BOOKMARKS_URI, Browser.HISTORY_PROJECTION, null, null, Browser.BookmarkColumns.DATE + " DESC");
+		if (cursor != null) {
+			int count = 0;
+			cursor.moveToFirst();
+			if (cursor.moveToFirst() && cursor.getCount() > 0) {
+				while (cursor.isAfterLast() == false) {
+					String title = cursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
+					String url = cursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX);
+					// check for duplicates
+					boolean found = false;
+					for(BookmarkInfo bookmarkInfo:bookmarks) {
+						if (bookmarkInfo.getUrl().equals(url)) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						BookmarkInfo bookmark = new BookmarkInfo();
+						bookmark.setTitle(title);
+						bookmark.setUrl(url);
+						bookmarks.add(bookmark);
+					}
+					cursor.moveToNext();
+					if (++count>=BROWSER_HISTORY_LIMIT) {
+						break;
+					}
 				}
 			}
 		}

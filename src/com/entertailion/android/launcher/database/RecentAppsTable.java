@@ -98,7 +98,7 @@ public class RecentAppsTable {
 	public static void removeAllRecentApps(Context context) {
 		Log.d(LOG_TAG, "removeAllRecentApps");
 		DatabaseHelper dbHelper = new DatabaseHelper(context);
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		try {
 			db.delete(DatabaseHelper.RECENT_APPS_TABLE, null, null);
 		} catch (Exception e) {

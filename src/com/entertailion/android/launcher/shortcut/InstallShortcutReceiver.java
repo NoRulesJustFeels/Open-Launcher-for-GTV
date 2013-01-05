@@ -17,6 +17,9 @@
 package com.entertailion.android.launcher.shortcut;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -54,6 +57,10 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 	private static final String ACTION_INSTALL_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
 	private static final String EXTRA_SHORTCUT_DUPLICATE = "duplicate";
 
+	// http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html
+	private static final Pattern REGEX_PATTERN_DASH = Pattern.compile("-");
+	private static final Matcher REGEX_PATTERN_DASH_MATCHER = REGEX_PATTERN_DASH.matcher("");
+
 	/**
 	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
 	 *      android.content.Intent)
@@ -72,13 +79,17 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 		}
 		Log.d(LOG_TAG, intent.toUri(Intent.URI_INTENT_SCHEME));
 		String name = data.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
-		if (name == null) {
+		if (name == null && intent.getData() != null) {
 			// Some shortcuts for TV channels don't have a name!
 			// TODO should we even allow this case?
-			name = extractChannelInfo(intent.getDataString());
-			if (name == null) {
-				name = context.getString(R.string.unknown);
-			}
+			name = extractUriInfo(intent.getDataString());
+		}
+		// Map local channel callsigns to broadcast network names
+		if (intent.getData() != null && intent.getDataString().startsWith("tv")) {
+			name = mapLocalChannelToNetwork(context, name);
+		}
+		if (name == null) {
+			name = context.getString(R.string.unknown);
 		}
 
 		// Extract the icon
@@ -155,8 +166,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 							biggerIcon = Utils.getWebSiteIcon(context, intent.getDataString());
 						}
 						// Invoke main launcher activity to let the user pick
-						// the row to
-						// add the shortcut
+						// the row to add the shortcut
 						Intent launcherIntent = new Intent(Launcher.SHORTCUTS_INTENT, intent.getData(), context, Launcher.class);
 						launcherIntent.putExtra("icon", biggerIcon == null ? intentIcon : biggerIcon);
 						launcherIntent.putExtra("name", intentName);
@@ -182,7 +192,7 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 	 * @param data
 	 * @return
 	 */
-	private static String extractChannelInfo(String data) {
+	private static String extractUriInfo(String data) {
 		if (data != null) {
 			// Various TV URI formats from different Google TV device OEMs:
 			// tv://channel/VODDM?deviceId=irb_0&channelNumber=250
@@ -206,6 +216,95 @@ public class InstallShortcutReceiver extends BroadcastReceiver {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Map local USA channel callsigns to their broadcast network names.
+	 * Use FCC data.
+	 * 
+	 * @param context
+	 * @param name
+	 * @return
+	 */
+	private String mapLocalChannelToNetwork(Context context, String name) {
+		if (name != null && Utils.isUsa()) {
+			name = Utils.stripBrackets(name.toUpperCase());
+			boolean usLocalChannel = false;
+			if ((name.startsWith("K") || name.startsWith("W") || name.startsWith("X"))) {
+				if (name.length() >= 4) { // KXTX
+					usLocalChannel = true;
+				} else if (name.length() >= 3) { // WRC
+					String[] nameParts = name.split(" ");
+					if (nameParts.length > 1) {
+						if (nameParts[0].length() == 3) { // WRC
+							try {
+								// WRC 4 WASHINGTON DC
+								float value = Float.parseFloat(nameParts[1]);
+								usLocalChannel = true;
+							} catch (Exception ex) {
+							}
+						}
+					} else if (nameParts.length == 1) {
+						usLocalChannel = true;
+					}
+				}
+			}
+			if (usLocalChannel) {
+				// normalize local channel names
+				String[] suffix = { "DT1", "DT2", "DT3", "DT4", "DT5", "DT6", "SD1", "SD2", "LD2", "LD3", "LD4", "SAT", "CD2", "CD3", "DT", "TV", "HD", "SD",
+						"D1", "D2", "D3", "D4", "D5", "LP", "CD", "CA", "LD", "WX", "D", "H" };
+				Matcher dashMatcher = REGEX_PATTERN_DASH_MATCHER.reset("");
+				for (int i = 0; i < suffix.length; i++) {
+					// order is important; do '-' before others
+					String sx = "-" + suffix[i];
+					// 3 or 4
+					if (name.endsWith(sx) && name.length() >= sx.length() + 3) {
+						name = name.substring(0, name.length() - sx.length()).trim();
+						break;
+					}
+					sx = " " + suffix[i];
+					if (name.endsWith(sx) && name.length() >= sx.length() + 3) {
+						name = name.substring(0, name.length() - sx.length()).trim();
+						break;
+					}
+					sx = suffix[i];
+					if (name.endsWith(sx) && name.length() >= sx.length() + 3) {
+						name = name.substring(0, name.length() - sx.length()).trim();
+						break;
+					}
+					dashMatcher = REGEX_PATTERN_DASH_MATCHER.reset(name);
+					if (dashMatcher.find()) {
+						String noDashName = dashMatcher.replaceAll("").trim();
+						if (noDashName.endsWith(sx) && noDashName.length() >= sx.length() + 3) {
+							name = noDashName.substring(0, noDashName.length() - sx.length()).trim();
+							break;
+						}
+					}
+				}
+				if (name.length() >= 4) {
+					String rest = name.substring(4).trim();
+					try {
+						float value = Float.parseFloat(rest); // WPIX11.1
+						name = name.substring(0, 4).trim();
+					} catch (Exception ex) {
+					}
+				} else if (name.length() >= 3) {
+					String rest = name.substring(3).trim();
+					try {
+						float value = Float.parseFloat(rest); // WPI11.1
+						name = name.substring(0, 4).trim();
+					} catch (Exception ex) {
+					}
+				}
+
+				Hashtable<String, String> callsigns = Utils.readUsLocalCallsigns(context);
+				String callsign = callsigns.get(name);
+				if (callsign != null) {
+					name = callsign;
+				}
+			}
+		}
+		return name;
 	}
 
 }

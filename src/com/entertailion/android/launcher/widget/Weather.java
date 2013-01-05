@@ -115,7 +115,7 @@ public class Weather extends LinearLayout {
 	}
 
 	private void setWeather(WeatherSet weatherSet) {
-		if (weatherSet != null && weatherSet.getWeatherCurrentCondition() != null) {
+		if (weatherSet != null && weatherSet.getWeatherCurrentCondition() != null && weatherSet.getWeatherCurrentCondition().getTempFahrenheit()!=null) {
 			try {
 				TextView currentTemp = (TextView) findViewById(R.id.current_temp);
 				if (isFahrenheit) {

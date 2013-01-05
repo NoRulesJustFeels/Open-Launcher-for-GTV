@@ -70,6 +70,9 @@ public class VirtualAppInfo extends ItemInfo {
 		case DatabaseHelper.VIRTUAL_BROWSER_BOOKMARKS_TYPE:
 			Dialogs.displayBookmarks(context);
 			return;
+		case DatabaseHelper.VIRTUAL_BROWSER_HISTORY_TYPE:
+			Dialogs.displayBrowserHistory(context);
+			return;
 		case DatabaseHelper.VIRTUAL_ALL_APPS_TYPE:
 			ArrayList<ApplicationInfo> applications = ((LauncherApplication) context.getApplicationContext()).getApplications();
 			Dialogs.displayAllApps(context, applications);
@@ -77,7 +80,7 @@ public class VirtualAppInfo extends ItemInfo {
 		case DatabaseHelper.VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE:
 			Dialogs.displayAllSpotlight(context);
 			return;
-		case DatabaseHelper.VIRTUAL_LIVE_TV:
+		case DatabaseHelper.VIRTUAL_LIVE_TV_TYPE:
 			Utils.launchLiveTV(context);
 			return;
 		}
@@ -93,13 +96,16 @@ public class VirtualAppInfo extends ItemInfo {
 			case DatabaseHelper.VIRTUAL_BROWSER_BOOKMARKS_TYPE:
 				imageView.setImageResource(R.drawable.bookmarks);
 				return;
+			case DatabaseHelper.VIRTUAL_BROWSER_HISTORY_TYPE:
+				imageView.setImageResource(R.drawable.browser_history);
+				return;
 			case DatabaseHelper.VIRTUAL_ALL_APPS_TYPE:
 				imageView.setImageResource(R.drawable.all_apps);
 				return;
 			case DatabaseHelper.VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE:
 				imageView.setImageResource(R.drawable.spotlight);
 				return;
-			case DatabaseHelper.VIRTUAL_LIVE_TV:
+			case DatabaseHelper.VIRTUAL_LIVE_TV_TYPE:
 				imageView.setImageResource(R.drawable.livetv);
 				return;
 			}

@@ -18,6 +18,7 @@ package com.entertailion.android.launcher.widget;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -82,7 +83,11 @@ public class GalleryAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	protected void updateView(ImageView imageView, int position) {
-		ItemInfo itemInfo = (ItemInfo) getItem(position);
-		itemInfo.renderIcon(imageView);
+		try {
+			ItemInfo itemInfo = (ItemInfo) getItem(position);
+			itemInfo.renderIcon(imageView);
+		} catch (Exception e) {
+			Log.d(LOG_TAG, "updateView", e);
+		}
 	}
 }

@@ -58,7 +58,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public static final int VIRTUAL_ALL_APPS_TYPE = VIRTUAL_APP_TYPE + 1;
 	public static final int VIRTUAL_BROWSER_BOOKMARKS_TYPE = VIRTUAL_APP_TYPE + 2;
 	public static final int VIRTUAL_SPOTLIGHT_WEB_APPS_TYPE = VIRTUAL_APP_TYPE + 3;
-	public static final int VIRTUAL_LIVE_TV = VIRTUAL_APP_TYPE + 4;
+	public static final int VIRTUAL_LIVE_TV_TYPE = VIRTUAL_APP_TYPE + 4;
+	public static final int VIRTUAL_BROWSER_HISTORY_TYPE = VIRTUAL_APP_TYPE + 5;
 
 	private Context context;
 
@@ -194,7 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			values.put(DatabaseHelper.ROW_ID_COLUMN, itemsRowId);
 			values.put(DatabaseHelper.POSITION_COLUMN, 1);
 			values.put(DatabaseHelper.TITLE_COLUMN, context.getString(R.string.live_tv));
-			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_LIVE_TV);
+			values.put(DatabaseHelper.ITEM_TYPE_COLUMN, VIRTUAL_LIVE_TV_TYPE);
 			db.insertOrThrow(DatabaseHelper.ITEMS_TABLE, DatabaseHelper.TITLE_COLUMN, values);
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "populateItemsTable", e);

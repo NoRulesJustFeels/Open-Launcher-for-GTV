@@ -37,7 +37,7 @@ import com.entertailion.android.launcher.utils.Utils;
 public class RowGallery extends LinearLayout {
 	private static String LOG_TAG = "RowGallery";
 	private static final float GALLERY_UNSELECTECTED_ALPHA = 0.6f;
-	private static final int GALLERY_ANIMATION_DURATION = 400;
+	public static final int GALLERY_ANIMATION_DURATION = 400;
 	private EcoGallery gallery;
 
 	public RowGallery(final Launcher launcher, int id, String title, GalleryAdapter adapter) {
@@ -150,5 +150,13 @@ public class RowGallery extends LinearLayout {
 
 	public Object getTag(int key) {
 		return gallery.getTag(key);
+	}
+	
+	public void setAnimation(boolean animate) {
+		if (animate) {
+			gallery.setAnimationDuration(GALLERY_ANIMATION_DURATION);
+		} else {
+			gallery.setAnimationDuration(0);
+		}
 	}
 }

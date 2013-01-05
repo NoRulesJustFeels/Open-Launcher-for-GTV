@@ -33,8 +33,10 @@ import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -87,15 +89,15 @@ import com.entertailion.android.launcher.R;
 public class Utils {
 	private static final String LOG_TAG = "Utils";
 
-	private static char[] ALPHABET = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-			'Y', 'Z' };
+	private static final char[] ALPHABET = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+			'X', 'Y', 'Z' };
 
 	private static int utilsIconWidth = -1;
 	private static int utilsIconHeight = -1;
 	private static final Paint utilsPaint = new Paint();
 	private static final Rect utilsBounds = new Rect();
 	private static final Rect utilsOldBounds = new Rect();
-	private static Canvas utilsCanvas = new Canvas();
+	private static final Canvas utilsCanvas = new Canvas();
 
 	static {
 		utilsCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG, Paint.FILTER_BITMAP_FLAG));
@@ -117,7 +119,7 @@ public class Utils {
 	 * @return A thumbnail for the specified icon or the icon itself if the
 	 *         thumbnail could not be created.
 	 */
-	static public Drawable createIconThumbnail(Drawable icon, Context context) {
+	public static final Drawable createIconThumbnail(Drawable icon, Context context) {
 		if (icon != null) {
 			if (utilsIconWidth == -1) {
 				final Resources resources = context.getResources();
@@ -203,7 +205,7 @@ public class Utils {
 	 * @return A thumbnail for the specified bitmap or the bitmap itself if the
 	 *         thumbnail could not be created.
 	 */
-	static public Bitmap createBitmapThumbnail(Bitmap bitmap, Context context) {
+	public static final Bitmap createBitmapThumbnail(Bitmap bitmap, Context context) {
 		if (utilsIconWidth == -1) {
 			final Resources resources = context.getResources();
 			utilsIconWidth = utilsIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
@@ -261,7 +263,7 @@ public class Utils {
 	 * @param context
 	 * @return
 	 */
-	static public Drawable drawReflection(Drawable icon, Context context) {
+	public static final Drawable drawReflection(Drawable icon, Context context) {
 		final Resources resources = context.getResources();
 		utilsIconWidth = utilsIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
 		// The gap we want between the reflection and the original image
@@ -339,7 +341,7 @@ public class Utils {
 	 * @param tint
 	 * @return
 	 */
-	static public Drawable scaledDrawable(Drawable icon, Context context, boolean tint, float scale, int color) {
+	public static final Drawable scaledDrawable(Drawable icon, Context context, boolean tint, float scale, int color) {
 		final Resources resources = context.getResources();
 		utilsIconWidth = utilsIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
 
@@ -378,7 +380,7 @@ public class Utils {
 	 * ADW: Use donut syule wallpaper rendering, we need this method to fit
 	 * wallpaper bitmap
 	 */
-	static public Bitmap centerToFit(Bitmap bitmap, int width, int height, Context context) {
+	public static final Bitmap centerToFit(Bitmap bitmap, int width, int height, Context context) {
 		final int bitmapWidth = bitmap.getWidth();
 		final int bitmapHeight = bitmap.getHeight();
 
@@ -398,7 +400,7 @@ public class Utils {
 		return bitmap;
 	}
 
-	public static void uninstallPackage(Context context, String packageName) {
+	public static final void uninstallPackage(Context context, String packageName) {
 		Uri packageUri = Uri.parse(packageName);
 		Intent uninstallIntent = new Intent(Intent.ACTION_DELETE, packageUri);
 		context.startActivity(uninstallIntent);
@@ -410,7 +412,7 @@ public class Utils {
 	 * @param value
 	 * @return
 	 */
-	public static String clean(String value) {
+	public static final String clean(String value) {
 		return value.replaceAll(":", "_").replaceAll("/", "_").replaceAll("\\\\", "_").replaceAll("\\?", "_").replaceAll("#", "_");
 	}
 
@@ -420,7 +422,7 @@ public class Utils {
 	 * @param aText
 	 * @return
 	 */
-	public static String escapeXML(String aText) {
+	public static final String escapeXML(String aText) {
 		if (null == aText) {
 			return "";
 		}
@@ -453,7 +455,7 @@ public class Utils {
 	 * 
 	 * @param context
 	 */
-	public static void showStatusbar(Context context) {
+	public static final void showStatusbar(Context context) {
 		try {
 			Object service = context.getSystemService("statusbar");
 			if (service != null) {
@@ -465,7 +467,7 @@ public class Utils {
 		}
 	}
 
-	public static Bitmap getBitmapFromURL(String src) {
+	public static final Bitmap getBitmapFromURL(String src) {
 		try {
 			URL url = new URL(src);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -486,7 +488,7 @@ public class Utils {
 		}
 	}
 
-	public static String getVersion(Context context) {
+	public static final String getVersion(Context context) {
 		String versionString = context.getString(R.string.unknown_build);
 		try {
 			PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -497,7 +499,7 @@ public class Utils {
 		return versionString;
 	}
 
-	public static void logDeviceInfo(Context context) {
+	public static final void logDeviceInfo(Context context) {
 		try {
 			PackageManager pm = context.getPackageManager();
 			PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
@@ -515,7 +517,7 @@ public class Utils {
 		}
 	}
 
-	public static String getLocalIpAddress() {
+	public static final String getLocalIpAddress() {
 		InetAddress inetAddress = Utils.getLocalInetAddress();
 		if (inetAddress != null) {
 			return inetAddress.getHostAddress().toString();
@@ -523,7 +525,7 @@ public class Utils {
 		return null;
 	}
 
-	public static InetAddress getLocalInetAddress() {
+	public static final InetAddress getLocalInetAddress() {
 		InetAddress selectedInetAddress = null;
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
@@ -557,11 +559,11 @@ public class Utils {
 		return null;
 	}
 
-	public static boolean isVizioCoStar() {
+	public static final boolean isVizioCoStar() {
 		return android.os.Build.PRODUCT.equals("StreamPlayer") && android.os.Build.MANUFACTURER.equals("VIZIO");
 	}
 
-	public static void showNotifications(Context context) {
+	public static final void showNotifications(Context context) {
 		if (Utils.isVizioCoStar()) {
 			// Vizio broke the statusbar logic for showing notifications
 			// Find their activity to show notifications instead
@@ -589,7 +591,7 @@ public class Utils {
 		}
 	}
 
-	public static void showSystemSettings(Context context) {
+	public static final void showSystemSettings(Context context) {
 		String settingsAction = "android.settings.SETTINGS";
 		if (Utils.isVizioCoStar()) {
 			// Vizio has a custom system settings app
@@ -614,11 +616,11 @@ public class Utils {
 		}
 	}
 
-	public static boolean isUsa() {
+	public static final boolean isUsa() {
 		return Locale.getDefault().equals(Locale.US);
 	}
 
-	public static LocationData getLocationData(Context context) {
+	public static final LocationData getLocationData(Context context) {
 		try {
 			LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 			Location location = locationManager.getLastKnownLocation("static");
@@ -637,7 +639,7 @@ public class Utils {
 		return null;
 	}
 
-	public synchronized static String getCachedData(Context context, String url, boolean refresh) {
+	public synchronized static final String getCachedData(Context context, String url, boolean refresh) {
 		Log.d(LOG_TAG, "getCachedData: " + url);
 		String data = null;
 		boolean exists = false;
@@ -707,19 +709,19 @@ public class Utils {
 		return data;
 	}
 
-	public static float fahrenheitToCelsius(float fahrenheit) {
+	public static final float fahrenheitToCelsius(float fahrenheit) {
 		return ((5.0f / 9.0f) * (fahrenheit - 32));
 	}
 
-	public static float celsiusToFahrenheit(float celsius) {
+	public static final float celsiusToFahrenheit(float celsius) {
 		return ((9.0f / 5.0f) * celsius + 32);
 	}
 
-	public static char keyCodeToLetter(int keyCode) {
+	public static final char keyCodeToLetter(int keyCode) {
 		return ALPHABET[keyCode - KeyEvent.KEYCODE_A];
 	}
 
-	public static Bitmap crop(Bitmap bitmap, int xSide, int ySide) {
+	public static final Bitmap crop(Bitmap bitmap, int xSide, int ySide) {
 		int origWidth = bitmap.getWidth();
 		int origHeight = bitmap.getHeight();
 		int targetWidth = origWidth - 2 * xSide;
@@ -727,7 +729,7 @@ public class Utils {
 		return Bitmap.createBitmap(bitmap, xSide, ySide, targetWidth, targetHeight).copy(Bitmap.Config.ARGB_8888, true);
 	}
 
-	public static void saveToFile(Context context, Bitmap bitmap, int targetWidth, int targetHeight, String fileName) throws IOException {
+	public static final void saveToFile(Context context, Bitmap bitmap, int targetWidth, int targetHeight, String fileName) throws IOException {
 		FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
 		// FileOutputStream fos = new FileOutputStream(fileName);
 		if (bitmap.getWidth() == targetWidth && bitmap.getHeight() == targetHeight) {
@@ -739,7 +741,7 @@ public class Utils {
 		fos.close();
 	}
 
-	public static Bitmap drawableToBitmap(Drawable drawable) {
+	public static final Bitmap drawableToBitmap(Drawable drawable) {
 		if (drawable instanceof BitmapDrawable) {
 			return ((BitmapDrawable) drawable).getBitmap();
 		}
@@ -752,7 +754,14 @@ public class Utils {
 		return bitmap;
 	}
 
-	public static String getWebSiteIcon(Context context, String url) {
+	/**
+	 * Determine if there is a high resolution icon available for the web site.
+	 * 
+	 * @param context
+	 * @param url
+	 * @return
+	 */
+	public static final String getWebSiteIcon(Context context, String url) {
 		String icon = null;
 		if (url != null) {
 			String data = Utils.getCachedData(context, url, true);
@@ -766,7 +775,7 @@ public class Utils {
 						Element meta = metas.first();
 						href = meta.attr("abs:content");
 					}
-					if (href == null) {
+					if (href == null || href.trim().length() == 0) {
 						// Find the Apple touch icon
 						Elements links = doc.select("link[rel=apple-touch-icon]");
 						if (links.size() > 0) {
@@ -774,13 +783,23 @@ public class Utils {
 							href = link.attr("abs:href");
 						}
 					}
-					if (href != null) {
+					if (href == null || href.trim().length() == 0) {
+						// Find the Facebook open graph icon
+						Elements links = doc.select("meta[property=og:image]");
+						if (links.size() > 0) {
+							Element link = links.first();
+							href = link.attr("abs:content");
+						}
+					}
+					if (href != null && href.trim().length() > 0) {
 						try {
 							Bitmap bitmap = Utils.getBitmapFromURL(href);
-							icon = "web_site_icon_" + Utils.clean(href) + ".png";
-							Utils.saveToFile(context, bitmap, bitmap.getWidth(), bitmap.getHeight(), icon);
-							bitmap.recycle();
-						} catch (IOException e) {
+							if (bitmap != null) {
+								icon = "web_site_icon_" + Utils.clean(href) + ".png";
+								Utils.saveToFile(context, bitmap, bitmap.getWidth(), bitmap.getHeight(), icon);
+								bitmap.recycle();
+							}
+						} catch (Exception e) {
 							Log.d(LOG_TAG, "getWebSiteIcon", e);
 						}
 					}
@@ -789,8 +808,8 @@ public class Utils {
 		}
 		return icon;
 	}
-	
-	public static void launchLiveTV(Context context) {
+
+	public static final void launchLiveTV(Context context) {
 		Log.d(LOG_TAG, "launchLiveTV");
 		PackageManager manager = context.getPackageManager();
 		Intent notificationIntent = new Intent("com.google.android.tv.intent.action.TV", null);
@@ -798,7 +817,8 @@ public class Utils {
 
 		final List<ResolveInfo> activities = manager.queryIntentActivities(notificationIntent, 0);
 		if (activities.size() > 0) {
-			// Intent { act=android.intent.action.VIEW dat=tv://passthrough flg=0x10200000 cmp=com.google.tv.player/.PlayerActivity }
+			// Intent { act=android.intent.action.VIEW dat=tv://passthrough
+			// flg=0x10200000 cmp=com.google.tv.player/.PlayerActivity }
 			ResolveInfo info = activities.get(0);
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tv://passthrough"));
 			intent.setComponent(new ComponentName(info.activityInfo.applicationInfo.packageName, info.activityInfo.name));
@@ -807,6 +827,57 @@ public class Utils {
 		} else {
 			Log.w(LOG_TAG, "no live TV activity");
 		}
+	}
+
+	// FCC TV data: http://transition.fcc.gov/mb/databases/cdbs/
+	// (http://transition.fcc.gov/mb/video/tvq.html)
+	// Facility data:
+	// http://transition.fcc.gov/ftp/Bureaus/MB/Databases/cdbs/facility.zip
+	// Clean data: Column AA not empty AND colum AC not empty; keep columns F,
+	// AA; remove '-TV', remove '-DT'
+	// Read from static asset file since data doesn't change that often
+	public static final Hashtable<String, String> readUsLocalCallsigns(Context context) {
+		Hashtable<String, String> localCallsigns = new Hashtable<String, String>(1800);
+		try {
+			InputStream is = context.getAssets().open("ustvcallsigns.csv");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			Pattern pattern = Pattern.compile("\t");
+			while ((line = reader.readLine()) != null) {
+				String[] temp = pattern.split(line);
+				if (temp.length == 2) {
+					localCallsigns.put(temp[0], temp[1]);
+				}
+			}
+			is.close();
+		} catch (Throwable x) {
+		}
+		return localCallsigns;
+	}
+
+	public static final String stripBrackets(String n) {
+		if (n.endsWith(")")) { // remove ()
+			int index = n.lastIndexOf("(");
+			if (index != -1) {
+				n = n.substring(0, index - 1).trim();
+			}
+		}
+		return n;
+	}
+	
+	public static final String readAssetFile(Context context, String filename) {
+		StringBuffer buffer = new StringBuffer();
+		try {
+			InputStream is = context.getAssets().open(filename);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				buffer.append(line).append('\n');
+			}
+			is.close();
+		} catch (Throwable x) {
+		}
+		return buffer.toString();
 	}
 
 }
