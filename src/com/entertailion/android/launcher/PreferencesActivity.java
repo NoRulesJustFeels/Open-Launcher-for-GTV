@@ -15,12 +15,16 @@
  */
 package com.entertailion.android.launcher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 
 import com.entertailion.android.launcher.utils.Analytics;
+import com.entertailion.android.launcher.wallpaper.StaticWallpaperChooser;
+import com.entertailion.android.launcher.wallpaper.WallpaperActivity;
 
 /**
  * Handle settings for app. Invoked by the user from the menu.
@@ -32,6 +36,7 @@ public class PreferencesActivity extends PreferenceActivity {
 	private static final String LOG_TAG = "PreferencesActivity";
 	public static final String GENERAL_CLOCK = "general.clock";
 	public static final String GENERAL_WEATHER = "general.weather";
+	public static final String GENERAL_WALLPAPER = "general.wallpaper";
 	public static final String ROWS_ROW_NAME = "rows.row_name";
 	public static final String ROWS_ITEM_NAME = "rows.item_name";
 
@@ -74,6 +79,22 @@ public class PreferencesActivity extends PreferenceActivity {
 					preference.setSummary(getString(R.string.preferences_general_weather_summary_unchecked));
 					Analytics.logEvent(Analytics.PREFERENCE_WEATHER_OFF);
 				}
+				return true;
+			}
+
+		});
+
+		// Wallpaper
+		Preference purchasePref = (Preference) findPreference(GENERAL_WALLPAPER);
+		purchasePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+			public boolean onPreferenceClick(Preference preference) {
+				//Intent intent = new Intent(PreferencesActivity.this, StaticWallpaperChooser.class);
+				//Intent intent = new Intent(PreferencesActivity.this, SolidColorWallpaperChooser.class);
+				//Intent intent = new Intent(PreferencesActivity.this, LiveWallpaperChooser.class);
+				Intent intent = new Intent(PreferencesActivity.this, WallpaperActivity.class);
+                startActivity(intent);
+                PreferencesActivity.this.finish();
 				return true;
 			}
 

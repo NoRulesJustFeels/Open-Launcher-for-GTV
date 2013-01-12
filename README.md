@@ -12,10 +12,11 @@ Open-Launcher-for-GTV
 <li>Quick access to recent apps</li>
 <li>Supports fast D-pad navigation</li>
 <li>Overlay design that displays more of live TV</li>
-<li>Direct access to browser bookmarks</li>
+<li>Direct access to browser bookmarks and history</li>
 <li>Direct access to <a href="https://www.google.com/tv/spotlight-gallery.html">Spotlight</a> web apps</li>
 <li>Displays current weather (USA only)</li>
 <li>Various customizable settings</li>
+<li>Change system wallpaper</li>
 </ul>
 </p>
 
@@ -27,12 +28,12 @@ Open-Launcher-for-GTV
 <li>To add a web site as a favorite: Load the site in the Chrome browser. Press Menu, select Save and then "Add to home screen". Confirm the web site details and select the OK button.</li>
 <li>To add a web site to bookmarks: Add bookmark in Chrome and then use Bookmarks app.</li>
 <li>To uninstall an app: Select All Apps, then long click on the app you want to uninstall.</li>
+<li>To use a personal photo as the wallpaper: Launch the Photos app and view the photo fullscreen. Press the Menu button and select "Set as wallpaper".</li>
 </ul>
 </p>
 
 <p>Limitations:
 <ul>
-<li>Wallpapers are not supported.</li>
 <li>Widgets are not supported.</li>
 <li>The icons provided by Google TV for bookmarks and for TV channel icons are low-res. In some cases, TV channels have generic icons.</li>
 </ul>

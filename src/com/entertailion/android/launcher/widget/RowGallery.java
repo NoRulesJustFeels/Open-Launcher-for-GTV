@@ -55,6 +55,7 @@ public class RowGallery extends LinearLayout {
 		gallery.setOnItemSelectedListener(launcher);
 		gallery.setOnItemClickListener(launcher);
 		gallery.setOnItemLongClickListener(launcher);
+		gallery.setFocusableInTouchMode(false);
 		gallery.setOnKeyListener(new OnKeyListener() {
 
 			@Override

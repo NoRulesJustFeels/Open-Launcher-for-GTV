@@ -179,8 +179,9 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 
 		mBroken = true;
 
-		mGestureDetector = new GestureDetector(context, this);
-		mGestureDetector.setIsLongpressEnabled(true);
+		// Disable mouse events
+		///mGestureDetector = new GestureDetector(context, this);
+		///mGestureDetector.setIsLongpressEnabled(true);
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.EcoGallery, defStyle, 0);
 
@@ -856,7 +857,7 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
+		
 		// Give everything to the gesture detector
 		boolean retValue = mGestureDetector.onTouchEvent(event);
 
@@ -875,7 +876,7 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 	 * {@inheritDoc}
 	 */
 	public boolean onSingleTapUp(MotionEvent e) {
-
+		
 		if (mDownTouchPosition >= 0) {
 
 			// An item tap should make it selected, so scroll to this child.
@@ -896,7 +897,6 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 	 * {@inheritDoc}
 	 */
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
 		if (!mShouldCallbackDuringFling) {
 			// We want to suppress selection changes
 
@@ -918,7 +918,6 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 	 * {@inheritDoc}
 	 */
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
 		if (localLOGV)
 			Log.v(TAG, String.valueOf(e2.getX() - e1.getX()));
 
@@ -966,7 +965,6 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 	 * {@inheritDoc}
 	 */
 	public boolean onDown(MotionEvent e) {
-
 		// Kill any existing fling/scroll
 		mFlingRunnable.stop(false);
 
@@ -1013,9 +1011,10 @@ public class EcoGallery extends CustomAbsSpinner implements GestureDetector.OnGe
 			return;
 		}
 
-		performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-		long id = getItemIdAtPosition(mDownTouchPosition);
-		dispatchLongPress(mDownTouchView, mDownTouchPosition, id);
+		// Disable long mouse clicks; causes sync issues with moving items
+//		performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+//		long id = getItemIdAtPosition(mDownTouchPosition);
+//		dispatchLongPress(mDownTouchView, mDownTouchPosition, id);
 	}
 
 	// Unused methods from GestureDetector.OnGestureListener below

@@ -40,6 +40,9 @@
     <string name="menu_uninstall_app">Uninstall App</string>
     <string name="menu_move_item">Move Item</string>
     <string name="menu_move_item_instuctions">Use the left and right arrow buttons to move and press OK to select the new position.</string>
+    <string name="menu_change_row_order">Change Row Order</string>
+    <string name="menu_change_row_order_done">Done</string>
+    <string name="menu_change_row_order_instructions">Click on the row name to select, then move up or down and click again to place in the new position:</string>
 
     <!-- Layers -->
     <string name="layer_all_apps">ALL APPS</string>
@@ -47,10 +50,6 @@
     <string name="layer_favorites">FAVORITES</string>
     <string name="layer_web_apps">SPOTLIGHT WEB APPS</string>
     <string name="unknown">Unknown</string>
-
-    <!-- Accessibility -->
-    <string name="accessibility_service_label">Open Launcher</string>
-    <string name="accessibility_service_description">Required by Open Launcher to support notificaitons</string>
 
     <!-- Message displayed when a shortcut is created by an external application -->
     <string name="shortcut_installed">Shortcut \"<xliff:g id="name">%s</xliff:g>\" created.</string>
@@ -66,15 +65,15 @@
     <string name="about_button_privacy_policy">Privacy Policy</string>
     <string name="about_button_privacy_policy_url">http://blog.entertailion.com/privacy-policy</string>
     <string name="about_button_web">Web Site</string>
-    <string name="about_button_web_url">https://github.com/entertailion/Open-Launcher-for-GTV</string>
+    <string name="about_button_web_url">http://openlauncher.com</string>
     <string name="about_button_more_apps">More Apps</string>
     <string name="about_button_more_apps_url">https://play.google.com/store/apps/developer?id=ENTERTAILION+LLC</string>
     <string name="about_version_title">Open Launcher %s</string>
     <string name="about_button_feedback">Feedback</string>
-    <string name="about_button_feedback_email">openlauncher@entertailion.com</string>
+    <string name="about_button_feedback_email">feedback@openlauncher.com</string>
     <string name="about_copyright">\u00A9 2013 ENTERTAILION LLC. All other trademarks and copyrights are property of their respective owners. All rights reserved.</string>
     <string name="unknown_build">Unknown</string>
-    <string name="about_instructions">Press the Home button to invoke the launcher. You might have to clear the existing default launcher using the system Settings app: Go to Applications/Manage applications/Home, then click the Clear defaults button.</string>
+    <string name="about_instructions">Press the Home button to invoke the launcher. You might have to clear the existing default launcher using the system Settings app: Go to Applications/Manage applications/Home, then click the \'Clear defaults\' button.</string>
     <string name="about_button_uninstall">Uninstall</string>
 
     <!-- Introduction -->
@@ -97,6 +96,8 @@
     <string name="preferences_rows_item_name_title">App Name</string>
     <string name="preferences_rows_item_name_summary_checked">Show the app name</string>
     <string name="preferences_rows_item_name_summary_unchecked">Hide the app name</string>
+    <string name="preferences_general_wallpaper_title">Wallpaper</string>
+    <string name="preferences_general_wallpaper_summary">Set the system wallpaper</string>
 
     <!-- Dialogs -->
     <string name="dialog_current_row">Current row</string>
@@ -110,6 +111,8 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_delete_row_message">Are you sure you want to delete the current row?</string>
     <string name="dialog_select_row">Select the row for %s</string>
+    <string name="dialog_name">Name</string>
+    <string name="dialog_channel_name_alert">You must enter a name for the channel.</string>
 
     <!-- Rating -->
     <string name="rating_title">Rate Open Launcher</string>
@@ -126,5 +129,14 @@
     <string name="day_thursday">Thu</string>
     <string name="day_friday">Fri</string>
     <string name="day_saturday">Sat</string>
-
+    
+    <!-- Title of dialog that appears after user selects Wallpaper from menu -->
+    <string name="chooser_wallpaper">Select wallpaper from</string>
+    <!-- Button label on Wallpaper Gallery screen; user selects this button to set a specific wallpaper -->
+    <string name="wallpaper_instructions">Set wallpaper</string>
+    <string name="wallpapers">Wallpapers</string>
+    <string name="photos">Photos</string>
+    <string name="live_wallpapers">Live Wallpapers</string>
+    <string name="wallpaper_photos_instructions">To use the Photos app to set the wallpaper, view the image fullscreen and then press the Menu button.</string>
+    
 </resources>

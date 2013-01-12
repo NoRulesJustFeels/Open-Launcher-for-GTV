@@ -68,7 +68,7 @@ public class RowsTable {
 		ArrayList<RowInfo> rows = null;
 		try {
 			cursor = db.rawQuery("SELECT " + DatabaseHelper.ID_COLUMN + ", " + DatabaseHelper.TITLE_COLUMN + ", " + DatabaseHelper.POSITION_COLUMN + ", "
-					+ DatabaseHelper.ROW_TYPE_COLUMN + " FROM " + DatabaseHelper.ROWS_TABLE, null);
+					+ DatabaseHelper.ROW_TYPE_COLUMN + " FROM " + DatabaseHelper.ROWS_TABLE  + " ORDER BY " + DatabaseHelper.POSITION_COLUMN, null);
 			if (cursor.moveToFirst()) {
 				rows = new ArrayList<RowInfo>();
 				do {

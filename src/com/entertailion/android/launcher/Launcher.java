@@ -22,14 +22,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Color;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
-import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,9 +42,9 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -61,7 +61,6 @@ import com.entertailion.android.launcher.database.RowsTable;
 import com.entertailion.android.launcher.item.ItemAdapter;
 import com.entertailion.android.launcher.item.ItemInfo;
 import com.entertailion.android.launcher.row.RowInfo;
-import com.entertailion.android.launcher.shortcut.InstallShortcutReceiver;
 import com.entertailion.android.launcher.utils.Analytics;
 import com.entertailion.android.launcher.utils.Utils;
 import com.entertailion.android.launcher.widget.Clock;
@@ -108,6 +107,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private static final int MENU_UNINSTALL_APP = MENU_DELETE_ROW + 1;
 	private static final int MENU_SYSTEM_SETTINGS = MENU_UNINSTALL_APP + 1;
 	private static final int MENU_MOVE_ITEM = MENU_SYSTEM_SETTINGS + 1;
+	private static final int MENU_CHANGE_ROW_ORDER = MENU_MOVE_ITEM + 1;
 
 	private static final int UPDATE_ITEM_STATUS = 1;
 
@@ -137,6 +137,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private int movingRow = 0;
 	private int movingPosition = 0;
 	private boolean isSwitching;
+	private MenuItem aboutMenuItem;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -218,7 +219,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	 * @param intent
 	 */
 	private void handleIntent(Intent intent) {
-		Log.d(LOG_TAG, "handleIntent: "+intent);
+		Log.d(LOG_TAG, "handleIntent: " + intent);
 		if (intent != null && intent.getAction() != null) {
 			if (intent.getAction().equals(SHORTCUTS_INTENT)) {
 				if (intent.getExtras() != null) {
@@ -230,7 +231,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				}
 			}
 		}
-		if (intent.getFlags()==(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)) {  // boot up  0x10800000
+		if (intent.getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)) { // boot
+																												// up
+																												// 0x10800000
 			Utils.launchLiveTV(this);
 			finish();
 		}
@@ -394,11 +397,16 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		if (rows != null) {
 			// Get the items for each row
 			for (RowInfo row : rows) {
-				ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, row.getId());
-				mapApplicationIcons(rowItems);
-				ItemAdapter adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
-				RowGallery gallery = new RowGallery(this, row.getId(), row.getTitle().toUpperCase(), adapter);
-				scrollViewContent.addView(gallery, 0);
+				Log.d(LOG_TAG, "row=" + row.getPosition());
+				try {
+					ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, row.getId());
+					mapApplicationIcons(rowItems);
+					ItemAdapter adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
+					RowGallery gallery = new RowGallery(this, row.getId(), row.getTitle().toUpperCase(), adapter);
+					scrollViewContent.addView(gallery, 0);
+				} catch (Exception e) {
+					Log.e(LOG_TAG, "bindItems", e);
+				}
 			}
 		}
 	}
@@ -451,7 +459,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	 *      android.view.View, int, long)
 	 */
 	@Override
-	public boolean onItemLongClick(CustomAdapterView<?> gallery, View dockView, int pos, long arg3) {
+	public boolean onItemLongClick(CustomAdapterView<?> gallery, View dockView, int arg, long pos) {
 		handledLongClick = true; // short circuit item clicks
 		return false;
 	}
@@ -497,6 +505,8 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		updateMenuDeleteItem(deleteItem);
 		MenuItem moveItem = contextMenu.findItem(MENU_MOVE_ITEM);
 		updateMenuMoveItem(moveItem);
+		MenuItem changeRowOrderItem = contextMenu.findItem(MENU_CHANGE_ROW_ORDER);
+		updateMenuChangeRowOrder(changeRowOrderItem);
 		MenuItem uninstallApp = contextMenu.findItem(MENU_UNINSTALL_APP);
 		updateMenuUninstallApp(uninstallApp);
 	}
@@ -538,7 +548,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			}
 		}
 	}
-	
+
 	/**
 	 * Utility method to set the state of the move item menu option.
 	 * 
@@ -551,6 +561,27 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				moveItem.setEnabled(false);
 			} else {
 				moveItem.setEnabled(true);
+			}
+		}
+	}
+
+	/**
+	 * Utility method to set the state of the change row order menu option.
+	 * 
+	 * @param moveItem
+	 */
+	private void updateMenuChangeRowOrder(MenuItem changeRowOrderItem) {
+		if (changeRowOrderItem != null) {
+			if (currentGallery == recentsGallery) {
+				// cannot move item from recents row
+				changeRowOrderItem.setEnabled(false);
+			} else {
+				ArrayList<RowInfo> rows = RowsTable.getRows(this);
+				if (rows != null && rows.size() > 1) {
+					changeRowOrderItem.setEnabled(true);
+				} else {
+					changeRowOrderItem.setEnabled(false);
+				}
 			}
 		}
 	}
@@ -631,10 +662,48 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			moveItem.setVisible(showItems);
 			updateMenuMoveItem(moveItem);
 		}
+		MenuItem changeRowOrderItem = menu.findItem(MENU_CHANGE_ROW_ORDER);
+		if (changeRowOrderItem != null) {
+			changeRowOrderItem.setVisible(showItems);
+			updateMenuChangeRowOrder(changeRowOrderItem);
+		}
 		MenuItem uninstallApp = menu.findItem(MENU_UNINSTALL_APP);
 		if (uninstallApp != null) {
 			uninstallApp.setVisible(showItems);
 			updateMenuUninstallApp(uninstallApp);
+		}
+
+		if (aboutMenuItem != null) {
+			// a bit of fun: randomly change about menu icon
+			int index = (int) (Math.random() * 8);
+			int resource = R.drawable.ic_menu_clipboard;
+			switch (index) {
+			case 0:
+				resource = R.drawable.ic_menu_rattle;
+				break;
+			case 1:
+				resource = R.drawable.ic_menu_pizza;
+				break;
+			case 2:
+				resource = R.drawable.ic_menu_lollipop;
+				break;
+			case 3:
+				resource = R.drawable.ic_menu_cupcake;
+				break;
+			case 4:
+				resource = R.drawable.ic_menu_rocket;
+				break;
+			case 5:
+				resource = R.drawable.ic_menu_glasses;
+				break;
+			case 6:
+				resource = R.drawable.ic_menu_cone;
+				break;
+			case 7:
+				resource = R.drawable.ic_menu_heart;
+				break;
+			}
+			aboutMenuItem.setIcon(resource);
 		}
 		return true;
 	}
@@ -685,16 +754,19 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			}
 		}
 		if (addAllMenuItems) {
-			menu.add(0, MENU_ADD_APP, 0, R.string.menu_add_app).setIcon(android.R.drawable.ic_menu_add);
-			menu.add(0, MENU_ADD_SPOTLIGHT_WEB_APP, 0, R.string.menu_add_spotlight_web_app).setIcon(android.R.drawable.ic_menu_add);
-			menu.add(0, MENU_DELETE_ROW, 0, R.string.menu_delete_row).setIcon(android.R.drawable.ic_notification_clear_all);
-			menu.add(0, MENU_DELETE_ITEM, 0, R.string.menu_delete_item).setIcon(android.R.drawable.ic_notification_clear_all);
-			menu.add(0, MENU_MOVE_ITEM, 0, R.string.menu_move_item).setIcon(android.R.drawable.ic_menu_revert);
-			menu.add(0, MENU_UNINSTALL_APP, 0, R.string.menu_uninstall_app).setIcon(android.R.drawable.ic_notification_clear_all);
+			menu.add(0, MENU_ADD_APP, 0, R.string.menu_add_app).setIcon(R.drawable.ic_menu_add);
+			menu.add(0, MENU_ADD_SPOTLIGHT_WEB_APP, 0, R.string.menu_add_spotlight_web_app).setIcon(R.drawable.ic_menu_add);
+			menu.add(0, MENU_MOVE_ITEM, 0, R.string.menu_move_item).setIcon(R.drawable.ic_menu_left_right);
+			menu.add(0, MENU_CHANGE_ROW_ORDER, 0, R.string.menu_change_row_order).setIcon(R.drawable.ic_menu_up_down);
+			menu.add(0, MENU_DELETE_ITEM, 0, R.string.menu_delete_item).setIcon(R.drawable.ic_menu_delete);
+			menu.add(0, MENU_DELETE_ROW, 0, R.string.menu_delete_row).setIcon(R.drawable.ic_menu_delete);
+			menu.add(0, MENU_UNINSTALL_APP, 0, R.string.menu_uninstall_app).setIcon(R.drawable.ic_menu_trash);
 		}
-		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings).setIcon(android.R.drawable.ic_menu_preferences).setAlphabeticShortcut('S');
-		menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_system_settings).setIcon(android.R.drawable.ic_menu_preferences);
-		menu.add(0, MENU_ABOUT, 0, R.string.menu_about).setIcon(android.R.drawable.ic_menu_info_details).setAlphabeticShortcut('A');
+		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings).setIcon(R.drawable.ic_menu_settings).setAlphabeticShortcut('S');
+		menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_system_settings).setIcon(R.drawable.ic_menu_settings);
+
+		aboutMenuItem = menu.add(0, MENU_ABOUT, 0, R.string.menu_about);
+		aboutMenuItem.setIcon(R.drawable.ic_menu_clipboard).setAlphabeticShortcut('A');
 	}
 
 	/**
@@ -717,6 +789,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			return true;
 		case MENU_MOVE_ITEM:
 			handleMoveItem();
+			return true;
+		case MENU_CHANGE_ROW_ORDER:
+			Dialogs.displayChangeRowOrder(this);
 			return true;
 		case MENU_DELETE_ROW:
 			Dialogs.displayDeleteRow(this);
@@ -755,7 +830,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			Dialogs.displayDeleteItem(this);
 		}
 	}
-	
+
 	/**
 	 * The user has selected to move an item in a gallery row.
 	 */
@@ -779,7 +854,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 					public void onClick(View v) {
 						showCover(false);
 						dialog.dismiss();
-						
+
 						startMoveItem();
 					}
 
@@ -806,7 +881,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			startMoveItem();
 		}
 	}
-	
+
 	private void startMoveItem() {
 		isMovingItem = true;
 		movingPosition = currentGallery.getSelectedItemPosition();
@@ -816,7 +891,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		PorterDuffColorFilter filter = new PorterDuffColorFilter(Color.YELLOW, Mode.SRC_IN);
 		selector.setColorFilter(filter);
 	}
-	
+
 	private void stopMoveItem() {
 		isMovingItem = false;
 		isSwitching = false;
@@ -958,7 +1033,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	 *            the name of the new row or null if existing row
 	 */
 	public void addItem(ItemInfo itemInfo, String rowName) {
-		Log.d(LOG_TAG, "addItem: " + itemInfo.getTitle() + ", " + rowName + ".");
+		Log.d(LOG_TAG, "addItem: " + itemInfo.getTitle() + ", " + rowName + ", " + currentGalleryRow);
 		if (rowName != null) {
 			// create a new row
 			try {
@@ -967,14 +1042,15 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				if (rows != null) {
 					int counter = 0;
 					// adjust the positions of existing rows
+					int mappedGalleryRow = rows.size() - currentGalleryRow - 1;
 					for (int i = 0; i < rows.size(); i++) {
 						RowInfo row = rows.get(i);
-						if (i == currentGalleryRow) {
-							rowId = (int) RowsTable.insertRow(this, rowName, currentGalleryRow, RowInfo.FAVORITE_TYPE);
-							counter++;
-						}
 						RowsTable.updateRow(this, row.getId(), row.getTitle(), counter, row.getType());
 						counter++;
+						if (i == mappedGalleryRow) {
+							rowId = (int) RowsTable.insertRow(this, rowName, mappedGalleryRow + 1, RowInfo.FAVORITE_TYPE);
+							counter++;
+						}
 					}
 				}
 				itemInfo.persistInsert(this, rowId, 0);
@@ -1022,16 +1098,16 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			}
 		}
 	}
-	
+
 	/**
 	 * Moves an item.
-
+	 * 
 	 * @param fromPosition
 	 * @param toPosition
 	 */
 	public void moveItem(int fromPosition, int toPosition) {
 		Log.d(LOG_TAG, "moveItem: " + fromPosition + ", " + toPosition);
-		if (!isSwitching) {
+		if (!isSwitching && Math.abs(fromPosition - toPosition) == 1) {
 			isSwitching = true;
 			try {
 				int rowId = (Integer) currentGallery.getTag(R.id.row_id);
@@ -1041,76 +1117,13 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				fromItemInfo.persistUpdate(this, rowId, toPosition);
 				ItemInfo toItemInfo = (ItemInfo) adapter.getItem(toPosition);
 				toItemInfo.persistUpdate(this, rowId, fromPosition);
-				
+
 				reloadGalleries(rowId);
 			} catch (Exception e) {
 				Log.d(LOG_TAG, "moveItem", e);
 			}
 			isSwitching = false;
 		}
-		
-//		if (rowName != null) {
-//			// create a new row
-//			try {
-//				int rowId = DatabaseHelper.NO_ID;
-//				ArrayList<RowInfo> rows = RowsTable.getRows(this);
-//				if (rows != null) {
-//					int counter = 0;
-//					// adjust the positions of existing rows
-//					for (int i = 0; i < rows.size(); i++) {
-//						RowInfo row = rows.get(i);
-//						if (i == currentGalleryRow) {
-//							rowId = (int) RowsTable.insertRow(this, rowName, currentGalleryRow, RowInfo.FAVORITE_TYPE);
-//							counter++;
-//						}
-//						RowsTable.updateRow(this, row.getId(), row.getTitle(), counter, row.getType());
-//						counter++;
-//					}
-//				}
-//				itemInfo.persistInsert(this, rowId, 0);
-//
-//				ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, rowId);
-//				mapApplicationIcons(rowItems);
-//				ItemAdapter adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
-//				currentGallery = new RowGallery(this, rowId, rowName.toUpperCase(), adapter);
-//				scrollViewContent.addView(currentGallery, currentGalleryRow);
-//
-//				updateStatus();
-//			} catch (Exception e) {
-//				Log.d(LOG_TAG, "addItem", e);
-//			}
-//		} else {
-//			int position = currentGallery.getSelectedItemPosition();
-//			try {
-//				int rowId = (Integer) currentGallery.getTag(R.id.row_id);
-//				Log.d(LOG_TAG, "rowId=" + rowId);
-//				GalleryAdapter<ItemInfo> adapter = (GalleryAdapter<ItemInfo>) currentGallery.getAdapter();
-//				int counter = 0;
-//				// adjust the positions of the existing items
-//				for (int i = 0; i < adapter.getCount(); i++) {
-//					int pos = i;
-//					if (infiniteScrolling) {
-//						pos = pos % adapter.getRealCount();
-//					}
-//					ItemInfo currentItemInfo = (ItemInfo) adapter.getItem(pos);
-//					// add the new item in the right position
-//					if (i == position) {
-//						itemInfo.persistInsert(this, rowId, position);
-//						counter++;
-//					}
-//					currentItemInfo.persistUpdate(this, rowId, counter);
-//					counter++;
-//				}
-//				// get the persisted list of items for the current row
-//				ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, rowId);
-//				mapApplicationIcons(rowItems);
-//				adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
-//				currentGallery.setAdapter(adapter);
-//				currentGallery.setSelectedItemPosition(position);
-//			} catch (Exception e) {
-//				Log.e(LOG_TAG, "addItem", e);
-//			}
-//		}
 	}
 
 	/**
@@ -1203,6 +1216,14 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			int rowId = (Integer) currentGallery.getTag(R.id.row_id);
 			Log.d(LOG_TAG, "rowId=" + rowId);
 			RowsTable.deleteRow(this, rowId);
+			// Adjust other row positions
+			ArrayList<RowInfo> rows = RowsTable.getRows(this);
+			if (rows != null) {
+				for (int i = 0; i < rows.size(); i++) {
+					RowInfo row = rows.get(i);
+					RowsTable.updateRow(this, row.getId(), row.getTitle(), i, row.getType());
+				}
+			}
 
 			scrollViewContent.removeViewAt(scrollView.getLevel());
 			currentGalleryRow = 0;
@@ -1236,11 +1257,12 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			}
 		}
 	}
-	
+
 	/**
 	 * Reload the data for all the rows.
 	 */
 	public void reloadAllGalleries() {
+		Log.d(LOG_TAG, "reloadAllGalleries");
 		scrollViewContent.removeAllViews();
 		recentsGallery = null;
 		currentGalleryRow = 0;

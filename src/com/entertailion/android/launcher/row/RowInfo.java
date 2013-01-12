@@ -16,6 +16,7 @@
 
 package com.entertailion.android.launcher.row;
 
+
 /**
  * Data structure for each row of favorite items. There are at least a recent
  * apps row and one favorites row.
@@ -23,7 +24,7 @@ package com.entertailion.android.launcher.row;
  * @author leon_nicholls
  * 
  */
-public class RowInfo {
+public class RowInfo implements Comparable<RowInfo> {
 	private static String LOG_TAG = "RowInfo";
 
 	public static final int FAVORITE_TYPE = 1;
@@ -32,6 +33,7 @@ public class RowInfo {
 	private int position;
 	private String title;
 	private int type;
+	boolean selected;
 
 	public RowInfo() {
 		super();
@@ -74,6 +76,25 @@ public class RowInfo {
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	@Override
+	public int compareTo(RowInfo other) {
+		if (position == other.getPosition()) {
+			return 0;
+		} else if (position < other.getPosition()) {
+			return -1;
+		} else {
+			return 1;
+		}
 	}
 
 }

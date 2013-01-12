@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="wallpapers">
+        <item>earth_night</item>
+        <item>saturn</item>
+        <item>moon</item>
+        <item>startrails</item>
+        <item>cathederal</item>
+        <item>airplane</item>
+        <item>tower</item>
+        <item>lines</item>
+        <item>blue</item>
+        <item>black</item>
+    </string-array>
+</resources>

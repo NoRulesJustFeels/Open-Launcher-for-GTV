@@ -27,8 +27,6 @@ import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.Browser;
@@ -37,10 +35,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.View.OnLongClickListener;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,12 +62,12 @@ import com.entertailion.android.launcher.database.RowsTable;
 import com.entertailion.android.launcher.database.SpotlightTable;
 import com.entertailion.android.launcher.item.AllItemAdapter;
 import com.entertailion.android.launcher.item.ItemInfo;
+import com.entertailion.android.launcher.row.RowAdapter;
 import com.entertailion.android.launcher.row.RowInfo;
 import com.entertailion.android.launcher.shortcut.InstallShortcutReceiver;
 import com.entertailion.android.launcher.spotlight.AllSpotlightAdapter;
 import com.entertailion.android.launcher.spotlight.SpotlightInfo;
 import com.entertailion.android.launcher.utils.Analytics;
-import com.entertailion.android.launcher.utils.FastBitmapDrawable;
 import com.entertailion.android.launcher.utils.Utils;
 
 /**
@@ -104,7 +104,6 @@ public class Dialogs {
 								absListView.setSelection(i);
 								break;
 							}
-
 						}
 						return true;
 					} else if (keyCode == KeyEvent.KEYCODE_MEDIA_NEXT) {
@@ -190,6 +189,19 @@ public class Dialogs {
 		TextView aboutTextView = (TextView) dialog.findViewById(R.id.about_text1);
 		aboutTextView.setTypeface(lightTypeface);
 		aboutTextView.setText(context.getString(R.string.about_version_title, Utils.getVersion(context)));
+		aboutTextView.setOnLongClickListener(new OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View v) {
+				context.showCover(false);
+				dialog.dismiss();
+				Intent intent = new Intent(context, EasterEggActivity.class);
+				context.startActivity(intent);
+				Analytics.logEvent(Analytics.EASTER_EGG);
+				return true;
+			}
+
+		});
 		TextView copyrightTextView = (TextView) dialog.findViewById(R.id.copyright_text);
 		copyrightTextView.setTypeface(lightTypeface);
 		TextView feedbackTextView = (TextView) dialog.findViewById(R.id.feedback_text);
@@ -334,7 +346,7 @@ public class Dialogs {
 		bookmarks.setTitle(context.getString(R.string.bookmarks));
 		bookmarks.setDrawable(context.getResources().getDrawable(R.drawable.bookmarks));
 		apps.add(bookmarks);
-		
+
 		// add browser history as a virtual app
 		VirtualAppInfo browserHistory = new VirtualAppInfo();
 		browserHistory.setType(DatabaseHelper.VIRTUAL_BROWSER_HISTORY_TYPE);
@@ -439,23 +451,26 @@ public class Dialogs {
 			if (cursor.moveToFirst() && cursor.getCount() > 0) {
 				while (cursor.isAfterLast() == false) {
 					String bookmarkIndex = cursor.getString(Browser.HISTORY_PROJECTION_BOOKMARK_INDEX);
-					if (bookmarkIndex.equals("1")) {
+					if (bookmarkIndex != null && bookmarkIndex.equals("1")) {
 						BookmarkInfo bookmark = new BookmarkInfo();
 						String title = cursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
 						bookmark.setTitle(title);
 						String url = cursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX);
 						bookmark.setUrl(url);
 
-						// for some reason the favicons aren't good looking images
-//						byte[] data = cursor.getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX);
-//						if (data != null) {
-//							try {
-//								Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//								bookmark.setDrawable(new FastBitmapDrawable(bitmap));
-//							} catch (Exception e) {
-//								Log.e(LOG_TAG, "bookmark icon", e);
-//							}
-//						}
+						// for some reason the favicons aren't good looking
+						// images
+						// byte[] data =
+						// cursor.getBlob(Browser.HISTORY_PROJECTION_FAVICON_INDEX);
+						// if (data != null) {
+						// try {
+						// Bitmap bitmap = BitmapFactory.decodeByteArray(data,
+						// 0, data.length);
+						// bookmark.setDrawable(new FastBitmapDrawable(bitmap));
+						// } catch (Exception e) {
+						// Log.e(LOG_TAG, "bookmark icon", e);
+						// }
+						// }
 						bookmarks.add(bookmark);
 					}
 
@@ -465,7 +480,7 @@ public class Dialogs {
 		}
 		return bookmarks;
 	}
-	
+
 	/**
 	 * Display the list of browser history.
 	 * 
@@ -506,7 +521,7 @@ public class Dialogs {
 		dialog.show();
 		Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
 	}
-	
+
 	/**
 	 * Utility method to load the list of browser history.
 	 */
@@ -521,22 +536,24 @@ public class Dialogs {
 				while (cursor.isAfterLast() == false) {
 					String title = cursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
 					String url = cursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX);
-					// check for duplicates
-					boolean found = false;
-					for(BookmarkInfo bookmarkInfo:bookmarks) {
-						if (bookmarkInfo.getUrl().equals(url)) {
-							found = true;
-							break;
+					if (url != null && title != null) {
+						// check for duplicates
+						boolean found = false;
+						for (BookmarkInfo bookmarkInfo : bookmarks) {
+							if (bookmarkInfo.getUrl() != null && bookmarkInfo.getUrl().equals(url)) {
+								found = true;
+								break;
+							}
+						}
+						if (!found) {
+							BookmarkInfo bookmark = new BookmarkInfo();
+							bookmark.setTitle(title);
+							bookmark.setUrl(url);
+							bookmarks.add(bookmark);
 						}
 					}
-					if (!found) {
-						BookmarkInfo bookmark = new BookmarkInfo();
-						bookmark.setTitle(title);
-						bookmark.setUrl(url);
-						bookmarks.add(bookmark);
-					}
 					cursor.moveToNext();
-					if (++count>=BROWSER_HISTORY_LIMIT) {
+					if (++count >= BROWSER_HISTORY_LIMIT) {
 						break;
 					}
 				}
@@ -955,7 +972,8 @@ public class Dialogs {
 	}
 
 	/**
-	 * Display dialog to allow user to select which row to add the shortcut.
+	 * Display dialog to allow user to select which row to add the shortcut. For
+	 * TV channels let the user change the channel name.
 	 * 
 	 * @see InstallShortcutReceiver
 	 * 
@@ -967,7 +985,16 @@ public class Dialogs {
 	public static void displayShortcutsRowSelection(final Launcher context, final String name, final String icon, final String uri) {
 		final Dialog dialog = new Dialog(context);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		final boolean isChannel = uri.startsWith("tv");
 		dialog.setContentView(R.layout.select_row);
+
+		final TextView channelTextView = (TextView) dialog.findViewById(R.id.channelText);
+		final EditText channelNameEditText = (EditText) dialog.findViewById(R.id.channelName);
+		if (isChannel) {
+			channelTextView.setVisibility(View.VISIBLE);
+			channelNameEditText.setVisibility(View.VISIBLE);
+			channelNameEditText.setText(name);
+		}
 
 		final TextView selectTextView = (TextView) dialog.findViewById(R.id.selectText);
 		selectTextView.setText(context.getString(R.string.dialog_select_row, name));
@@ -1017,10 +1044,19 @@ public class Dialogs {
 
 			@Override
 			public void onClick(View v) {
+				String shortcutName = name;
 				try {
+					if (isChannel) {
+						String channelName = channelNameEditText.getText().toString().trim();
+						if (channelName.length() == 0) {
+							channelNameEditText.requestFocus();
+							displayAlert(context, context.getString(R.string.dialog_channel_name_alert));
+							return;
+						}
+						shortcutName = channelName;
+					}
 					// if the new row radio button is selected, the user must
-					// enter
-					// a name for the new row
+					// enter a name for the new row
 					String rowName = nameEditText.getText().toString().trim();
 					if (newRadioButton.isChecked() && rowName.length() == 0) {
 						nameEditText.requestFocus();
@@ -1052,8 +1088,8 @@ public class Dialogs {
 
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse(uri));
-					ItemsTable.insertItem(context, rowId, rowPosition, name, intent, icon, DatabaseHelper.SHORTCUT_TYPE);
-					Toast.makeText(context, context.getString(R.string.shortcut_installed, name), Toast.LENGTH_SHORT).show();
+					ItemsTable.insertItem(context, rowId, rowPosition, shortcutName, intent, icon, DatabaseHelper.SHORTCUT_TYPE);
+					Toast.makeText(context, context.getString(R.string.shortcut_installed, shortcutName), Toast.LENGTH_SHORT).show();
 					context.reloadAllGalleries();
 
 					if (currentRow) {
@@ -1094,4 +1130,104 @@ public class Dialogs {
 		Analytics.logEvent(Analytics.DIALOG_ADD_SHORTCUT);
 	}
 
+	/**
+	 * Change the order of the favorite rows.
+	 * 
+	 * @param context
+	 */
+	public static void displayChangeRowOrder(final Launcher context) {
+		final Dialog dialog = new Dialog(context);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.row_list);
+
+		final ListView listView = (ListView) dialog.findViewById(R.id.rowList);
+		ArrayList<RowInfo> persistedRows = RowsTable.getRows(context);
+		final ArrayList<RowInfo> rows = new ArrayList<RowInfo>();
+		// Add in reverse order to match favorite rows order
+		for (RowInfo rowInfo : persistedRows) {
+			rows.add(0, rowInfo);
+		}
+		final RowAdapter rowAdapter = new RowAdapter(context, rows);
+		listView.setAdapter(rowAdapter);
+		listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				RowInfo rowInfo = (RowInfo) parent.getAdapter().getItem(position);
+				if (rowInfo.isSelected()) {
+					rowInfo.setSelected(false);
+
+					// Persist the new row order
+					try {
+						int counter = 0;
+						for (int i = rowAdapter.getCount() - 1; i >= 0; i--) {
+							RowInfo currentRowInfo = (RowInfo) parent.getAdapter().getItem(i);
+							RowsTable.updateRow(context, currentRowInfo.getId(), currentRowInfo.getTitle(), counter, currentRowInfo.getType());
+							counter++;
+						}
+					} catch (Exception e) {
+						Log.e(LOG_TAG, "displayChangeRowOrder", e);
+					}
+					Analytics.logEvent(Analytics.CHANGE_ROW_ORDER);
+				} else {
+					rowInfo.setSelected(true);
+				}
+				rowAdapter.notifyDataSetChanged();
+			}
+
+		});
+		listView.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				// Swap the selected item in the list
+				int selectedRowIndex = -1;
+				for (int i = 0; i < rows.size(); i++) {
+					RowInfo rowInfo = rows.get(i);
+					if (rowInfo.isSelected()) {
+						selectedRowIndex = i;
+						break;
+					}
+				}
+				if (selectedRowIndex != -1) {
+					try {
+						Collections.swap(rows, position, selectedRowIndex);
+						rowAdapter.notifyDataSetChanged();
+					} catch (Exception e) {
+						Log.e(LOG_TAG, "displayChangeRowOrder", e);
+					}
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+
+		});
+		listView.setDrawingCacheEnabled(true);
+		listView.setOnKeyListener(onKeyListener);
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				context.showCover(false);
+				context.reloadAllGalleries();
+			}
+
+		});
+		Button okButton = (Button) dialog.findViewById(R.id.okButton);
+		okButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				context.showCover(false);
+				dialog.dismiss();
+				context.reloadAllGalleries();
+			}
+
+		});
+		context.showCover(true);
+		dialog.show();
+		Analytics.logEvent(Analytics.DIALOG_CHANGE_ROW_ORDER);
+	}
 }

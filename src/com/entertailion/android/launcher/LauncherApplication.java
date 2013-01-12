@@ -346,23 +346,25 @@ public class LauncherApplication extends Application {
 				if (rows != null) {
 					for (RowInfo row : rows) {
 						ArrayList<ItemInfo> rowItems = ItemsTable.getItems(context, row.getId());
-						for (ItemInfo itemInfo : rowItems) {
-							if (itemInfo instanceof ApplicationInfo) {
-								try {
-									if (itemInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
-
-										if (rowItems.size() == 1) {
-											// TODO what if last row?
-											if (rows.size() > 1) {
+						if (rowItems!=null) {
+							for (ItemInfo itemInfo : rowItems) {
+								if (itemInfo instanceof ApplicationInfo) {
+									try {
+										if (itemInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
+	
+											if (rowItems.size() == 1) {
+												// TODO what if last row?
+												if (rows.size() > 1) {
+													ItemsTable.deleteItem(context, itemInfo.getId());
+													RowsTable.deleteRow(context, row.getId());
+												}
+											} else {
 												ItemsTable.deleteItem(context, itemInfo.getId());
-												RowsTable.deleteRow(context, row.getId());
 											}
-										} else {
-											ItemsTable.deleteItem(context, itemInfo.getId());
 										}
+									} catch (Exception e) {
+										Log.d(LOG_TAG, "onReceive", e);
 									}
-								} catch (Exception e) {
-									Log.d(LOG_TAG, "onReceive", e);
 								}
 							}
 						}

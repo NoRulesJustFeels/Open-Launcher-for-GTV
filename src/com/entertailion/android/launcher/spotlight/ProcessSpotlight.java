@@ -126,16 +126,22 @@ public class ProcessSpotlight implements Runnable {
 							icon = "spotlight_" + sanitizeName(title) + ".png";
 							File file = context.getFileStreamPath(icon);
 							if (!file.exists()) {
-								// create a file-based icon from original
-								// 360x203
-								Bitmap bitmap = Utils.getBitmapFromURL(logo);
-								if (bitmap!=null) {
-									bitmap = Utils.crop(bitmap, 30, 30);
-									Utils.saveToFile(context, bitmap, 100, 100, icon);
-									bitmap.recycle();
-									bitmap = null;
+								Uri uri = Uri.parse(url);
+								String alternateLogo = Utils.getWebSiteIcon(context, uri.getScheme()+"://"+uri.getHost());
+								if (alternateLogo!=null && alternateLogo.trim().length()>0) {
+									icon = alternateLogo;
 								} else {
-									icon = null;
+									// create a file-based icon from original
+									// 360x203
+									Bitmap bitmap = Utils.getBitmapFromURL(logo);
+									if (bitmap!=null) {
+										bitmap = Utils.crop(bitmap, 30, 30);
+										Utils.saveToFile(context, bitmap, 100, 100, icon);
+										bitmap.recycle();
+										bitmap = null;
+									} else {
+										icon = null;
+									}
 								}
 							}
 						} catch (Exception e) {

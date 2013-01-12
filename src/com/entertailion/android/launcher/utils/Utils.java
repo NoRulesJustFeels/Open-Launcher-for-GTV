@@ -769,11 +769,26 @@ public class Utils {
 				Document doc = Jsoup.parse(data);
 				if (doc != null) {
 					String href = null;
-					// Find the Microsoft tile icon
-					Elements metas = doc.select("meta[name=msapplication-TileImage]");
+					Elements metas = doc.select("meta[itemprop=image]");
 					if (metas.size() > 0) {
 						Element meta = metas.first();
 						href = meta.attr("abs:content");
+						// weird jsoup bug: abs doesn't always work
+						if (href==null || href.trim().length()==0) {
+							href = url + meta.attr("content");
+						}
+					}
+					if (href == null || href.trim().length() == 0) {
+						// Find the Microsoft tile icon
+						metas = doc.select("meta[name=msapplication-TileImage]");
+						if (metas.size() > 0) {
+							Element meta = metas.first();
+							href = meta.attr("abs:content");
+							// weird jsoup bug: abs doesn't always work
+							if (href==null || href.trim().length()==0) {
+								href = url + meta.attr("content");
+							}
+						}
 					}
 					if (href == null || href.trim().length() == 0) {
 						// Find the Apple touch icon
@@ -781,14 +796,22 @@ public class Utils {
 						if (links.size() > 0) {
 							Element link = links.first();
 							href = link.attr("abs:href");
+							// weird jsoup bug: abs doesn't always work
+							if (href==null || href.trim().length()==0) {
+								href = url +link.attr("href");
+							}
 						}
 					}
 					if (href == null || href.trim().length() == 0) {
 						// Find the Facebook open graph icon
-						Elements links = doc.select("meta[property=og:image]");
-						if (links.size() > 0) {
-							Element link = links.first();
+						metas = doc.select("meta[property=og:image]");
+						if (metas.size() > 0) {
+							Element link = metas.first();
 							href = link.attr("abs:content");
+							// weird jsoup bug: abs doesn't always work
+							if (href==null || href.trim().length()==0) {
+								href = url +link.attr("content");
+							}
 						}
 					}
 					if (href != null && href.trim().length() > 0) {

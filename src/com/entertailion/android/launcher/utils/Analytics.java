@@ -50,6 +50,7 @@ public class Analytics {
 	public static final String DIALOG_ADD_SHORTCUT = "dialog.add_shortcut";
 	public static final String DIALOG_DELETE_ITEM = "dialog.delete_item";
 	public static final String DIALOG_DELETE_ROW = "dialog.delete_row";
+	public static final String DIALOG_CHANGE_ROW_ORDER = "dialog.change_row_order";
 	public static final String SETTINGS = "settings";
 	public static final String SYSTEM_SETTINGS = "system.settings";
 	public static final String PREFERENCE_CLOCK_ON = "preference.clock.on";
@@ -77,6 +78,8 @@ public class Analytics {
 	public static final String DELETE_ITEM = "delete.item";
 	public static final String DELETE_ROW = "delete.row";
 	public static final String UNINSTALL_APP = "uninstall.app";
+	public static final String EASTER_EGG = "easter.egg";
+	public static final String CHANGE_ROW_ORDER = "row.change_order";
 
 	private static Context context;
 

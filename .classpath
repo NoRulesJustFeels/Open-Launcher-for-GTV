@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="lib" path="libs/jsoup.jar"/>
+	<classpathentry kind="lib" path="libs/android-query.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

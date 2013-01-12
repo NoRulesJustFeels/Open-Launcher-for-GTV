@@ -24,30 +24,30 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="6dip" >
-                
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_launcher_home" 
-                    android:paddingRight="10dip"/>
+                    android:paddingRight="10dip"
+                    android:src="@drawable/ic_launcher_home" />
 
                 <TextView
                     android:id="@+id/about_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10sp"
+                    android:clickable="true"
                     android:text="@string/about_title"
                     android:textColor="@color/white"
                     android:textSize="24sp" />
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="4dip"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:padding="4dip" >
 
                 <TextView
                     android:id="@+id/feedback_text"
@@ -99,7 +99,7 @@
                 android:paddingRight="26dip"
                 android:text="@string/about_button_more_apps"
                 android:textSize="18sp" />
-            
+
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="26dip"

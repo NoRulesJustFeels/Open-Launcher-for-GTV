@@ -12,6 +12,11 @@
             android:key="general.weather"
             android:summary="@string/preferences_general_weather_summary_checked"
             android:title="@string/preferences_general_weather_title" />
+
+        <Preference
+            android:key="general.wallpaper"
+            android:summary="@string/preferences_general_wallpaper_summary"
+            android:title="@string/preferences_general_wallpaper_title" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_category_rows" >
         <CheckBoxPreference
