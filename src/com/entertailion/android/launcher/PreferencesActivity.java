@@ -36,6 +36,7 @@ public class PreferencesActivity extends PreferenceActivity {
 	private static final String LOG_TAG = "PreferencesActivity";
 	public static final String GENERAL_CLOCK = "general.clock";
 	public static final String GENERAL_WEATHER = "general.weather";
+	public static final String GENERAL_LIVE_TV = "general.live_tv";
 	public static final String GENERAL_WALLPAPER = "general.wallpaper";
 	public static final String ROWS_ROW_NAME = "rows.row_name";
 	public static final String ROWS_ITEM_NAME = "rows.item_name";
@@ -78,6 +79,25 @@ public class PreferencesActivity extends PreferenceActivity {
 				} else {
 					preference.setSummary(getString(R.string.preferences_general_weather_summary_unchecked));
 					Analytics.logEvent(Analytics.PREFERENCE_WEATHER_OFF);
+				}
+				return true;
+			}
+
+		});
+		
+		pref = (Preference) findPreference(GENERAL_LIVE_TV);
+		pref.setSummary(pref.getSharedPreferences().getBoolean(GENERAL_LIVE_TV, true) ? getString(R.string.preferences_general_livetv_summary_checked)
+				: getString(R.string.preferences_general_livetv_summary_unchecked));
+		pref.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				if (newValue.equals(Boolean.TRUE)) {
+					preference.setSummary(getString(R.string.preferences_general_livetv_summary_checked));
+					Analytics.logEvent(Analytics.PREFERENCE_LIVE_TV_ON);
+				} else {
+					preference.setSummary(getString(R.string.preferences_general_livetv_summary_unchecked));
+					Analytics.logEvent(Analytics.PREFERENCE_LIVE_TV_OFF);
 				}
 				return true;
 			}

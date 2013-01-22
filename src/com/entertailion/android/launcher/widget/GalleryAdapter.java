@@ -76,7 +76,11 @@ public class GalleryAdapter<T> extends ArrayAdapter<T> {
 			iconView.setBackgroundColor(getContext().getResources().getColor(R.color.transparent));
 		}
 
-		updateView(iconView, position);
+		try {
+			updateView(iconView, position);
+		} catch (Exception e) {
+			Log.d(LOG_TAG, "getView", e);
+		}
 
 		iconView.setTag(R.id.pager_position, position);
 		return iconView;

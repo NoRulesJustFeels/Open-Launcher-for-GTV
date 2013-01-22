@@ -57,6 +57,8 @@ public class Analytics {
 	public static final String PREFERENCE_CLOCK_OFF = "preference.clock.off";
 	public static final String PREFERENCE_WEATHER_ON = "preference.weather.on";
 	public static final String PREFERENCE_WEATHER_OFF = "preference.weather.off";
+	public static final String PREFERENCE_LIVE_TV_ON = "preference.live_tv.on";
+	public static final String PREFERENCE_LIVE_TV_OFF = "preference.live_tv.off";
 	public static final String PREFERENCE_ROW_NAME_ON = "preference.row_name.on";
 	public static final String PREFERENCE_ROW_NAME_OFF = "preference.row_name.off";
 	public static final String PREFERENCE_ITEM_NAME_ON = "preference.item_name.on";
@@ -80,6 +82,9 @@ public class Analytics {
 	public static final String UNINSTALL_APP = "uninstall.app";
 	public static final String EASTER_EGG = "easter.egg";
 	public static final String CHANGE_ROW_ORDER = "row.change_order";
+	public static final String WIDGET_PICK = "widget.pick";
+	public static final String WIDGET_ADD = "widget.add";
+	public static final String MOVE_ITEM = "move.item";
 
 	private static Context context;
 

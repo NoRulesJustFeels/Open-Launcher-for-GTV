@@ -43,6 +43,7 @@
     <string name="menu_change_row_order">Change Row Order</string>
     <string name="menu_change_row_order_done">Done</string>
     <string name="menu_change_row_order_instructions">Click on the row name to select, then move up or down and click again to place in the new position:</string>
+    <string name="menu_add_widget">Add Widget</string>
 
     <!-- Layers -->
     <string name="layer_all_apps">ALL APPS</string>
@@ -74,6 +75,7 @@
     <string name="about_copyright">\u00A9 2013 ENTERTAILION LLC. All other trademarks and copyrights are property of their respective owners. All rights reserved.</string>
     <string name="unknown_build">Unknown</string>
     <string name="about_instructions">Press the Home button to invoke the launcher. You might have to clear the existing default launcher using the system Settings app: Go to Applications/Manage applications/Home, then click the \'Clear defaults\' button.</string>
+    <string name="about_instructions_vizio">Press the Home button to invoke the launcher. You might have to clear the existing default launcher using the system Settings app: Go to Applications/Manage applications/AppLauncher, then click the \'Clear defaults\' button.</string>
     <string name="about_button_uninstall">Uninstall</string>
 
     <!-- Introduction -->
@@ -89,6 +91,9 @@
     <string name="preferences_general_weather_title">Weather (USA only)</string>
     <string name="preferences_general_weather_summary_checked">Show the weather</string>
     <string name="preferences_general_weather_summary_unchecked">Hide the weather</string>
+    <string name="preferences_general_livetv_title">Live TV on Startup</string>
+    <string name="preferences_general_livetv_summary_checked">Launch Live TV on startup</string>
+    <string name="preferences_general_livetv_summary_unchecked">Don\&apos;t launch Live TV on startup</string>
     <string name="preferences_category_rows">Rows</string>
     <string name="preferences_rows_row_name_title">Row Name</string>
     <string name="preferences_rows_row_name_summary_checked">Show the row name</string>
@@ -138,5 +143,8 @@
     <string name="photos">Photos</string>
     <string name="live_wallpapers">Live Wallpapers</string>
     <string name="wallpaper_photos_instructions">To use the Photos app to set the wallpaper, view the image fullscreen and then press the Menu button.</string>
+    
+    <!--  Widgets -->
+    <string name="gadget_error_text">Problem loading widget</string>
     
 </resources>

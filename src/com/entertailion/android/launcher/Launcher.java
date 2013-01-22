@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -54,6 +56,9 @@ import android.widget.TextView;
 
 import com.entertailion.android.launcher.apps.ApplicationInfo;
 import com.entertailion.android.launcher.apps.AppsAdapter;
+import com.entertailion.android.launcher.appwidget.CellLayout;
+import com.entertailion.android.launcher.appwidget.LauncherAppWidgetHost;
+import com.entertailion.android.launcher.appwidget.Workspace;
 import com.entertailion.android.launcher.database.DatabaseHelper;
 import com.entertailion.android.launcher.database.ItemsTable;
 import com.entertailion.android.launcher.database.RecentAppsTable;
@@ -97,6 +102,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 
 	public static final String SHORTCUTS_INTENT = "com.entertailion.android.launcher.SHORTCUTS_INTENT";
 
+	private static final int REQUEST_PICK_APPWIDGET = 1;
+	private static final int REQUEST_CREATE_APPWIDGET = 2;
+
 	// Identifiers for menu items
 	private static final int MENU_SETTINGS = Menu.FIRST + 1;
 	private static final int MENU_ABOUT = MENU_SETTINGS + 1;
@@ -108,12 +116,15 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private static final int MENU_SYSTEM_SETTINGS = MENU_UNINSTALL_APP + 1;
 	private static final int MENU_MOVE_ITEM = MENU_SYSTEM_SETTINGS + 1;
 	private static final int MENU_CHANGE_ROW_ORDER = MENU_MOVE_ITEM + 1;
+	private static final int MENU_ADD_WIDGET = MENU_CHANGE_ROW_ORDER + 1;
 
 	private static final int UPDATE_ITEM_STATUS = 1;
 
 	private static final int ITEM_CLICK_ANIMATION_DELAY = 100;
 	private static final int UPDATE_STATUS_DELAY = 300;
 	private final static float COVER_ALPHA_VALUE = 0.8f;
+
+	private static final int APPWIDGET_HOST_ID = 1023;
 
 	private ImageView topGradient, bottomGradient, selector, arrowUp, arrowDown, coverImageView, menuImageView;
 	private RowGallery recentsGallery, currentGallery;
@@ -138,6 +149,10 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private int movingPosition = 0;
 	private boolean isSwitching;
 	private MenuItem aboutMenuItem;
+	private AppWidgetManager appWidgetManager;
+	private LauncherAppWidgetHost appWidgetHost;
+	private CellLayout.CellInfo addItemCellInfo;
+	private Workspace workspace;
 
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -153,6 +168,10 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		// setDefaultKeyMode(DEFAULT_KEYS_SEARCH_LOCAL);
 
 		setContentView(R.layout.dock);
+
+		appWidgetManager = AppWidgetManager.getInstance(this);
+		appWidgetHost = new LauncherAppWidgetHost(this, APPWIDGET_HOST_ID);
+		appWidgetHost.startListening();
 
 		itemName = (TextView) findViewById(R.id.name);
 		itemName.setTypeface(lightTypeface);
@@ -231,11 +250,13 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 				}
 			}
 		}
-		if (intent.getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)) { // boot
-																												// up
-																												// 0x10800000
-			Utils.launchLiveTV(this);
-			finish();
+		// boot up flag: 0x10800000
+		if (intent.getFlags() == (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)) {
+			boolean liveTV = preferences.getBoolean(PreferencesActivity.GENERAL_LIVE_TV, true);
+			if (liveTV) {
+				Utils.launchLiveTV(this);
+				finish();
+			}
 		}
 	}
 
@@ -762,6 +783,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			menu.add(0, MENU_DELETE_ROW, 0, R.string.menu_delete_row).setIcon(R.drawable.ic_menu_delete);
 			menu.add(0, MENU_UNINSTALL_APP, 0, R.string.menu_uninstall_app).setIcon(R.drawable.ic_menu_trash);
 		}
+		// TODO widget not ready yet
+		// /menu.add(0, MENU_ADD_WIDGET, 0,
+		// R.string.menu_add_widget).setIcon(R.drawable.ic_menu_widget).setAlphabeticShortcut('W');
 		menu.add(0, MENU_SETTINGS, 0, R.string.menu_settings).setIcon(R.drawable.ic_menu_settings).setAlphabeticShortcut('S');
 		menu.add(0, MENU_SYSTEM_SETTINGS, 0, R.string.menu_system_settings).setIcon(R.drawable.ic_menu_settings);
 
@@ -814,6 +838,13 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		case MENU_SYSTEM_SETTINGS:
 			Utils.showSystemSettings(this);
 			Analytics.logEvent(Analytics.SYSTEM_SETTINGS);
+			return true;
+		case MENU_ADD_WIDGET:
+			int appWidgetId = appWidgetHost.allocateAppWidgetId();
+			Intent pickWidgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_PICK);
+			pickWidgetIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+			startActivityForResult(pickWidgetIntent, REQUEST_PICK_APPWIDGET);
+			Analytics.logEvent(Analytics.WIDGET_PICK);
 			return true;
 		}
 		return false;
@@ -890,6 +921,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		currentGallery.setAnimation(false);
 		PorterDuffColorFilter filter = new PorterDuffColorFilter(Color.YELLOW, Mode.SRC_IN);
 		selector.setColorFilter(filter);
+		Analytics.logEvent(Analytics.MOVE_ITEM);
 	}
 
 	private void stopMoveItem() {
@@ -1287,5 +1319,100 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		} else {
 			coverImageView.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		Log.d(LOG_TAG, "onActivityResult=" + requestCode);
+		if (resultCode == RESULT_OK && addItemCellInfo != null) {
+			switch (requestCode) {
+			case REQUEST_PICK_APPWIDGET:
+				addAppWidget(intent);
+				break;
+			case REQUEST_CREATE_APPWIDGET:
+				completeAddAppWidget(intent, addItemCellInfo);
+				break;
+			}
+		} else if ((requestCode == REQUEST_PICK_APPWIDGET || requestCode == REQUEST_CREATE_APPWIDGET) && resultCode == RESULT_CANCELED && intent != null) {
+			// Clean up the appWidgetId if we canceled
+			int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+			if (appWidgetId != -1) {
+				appWidgetHost.deleteAppWidgetId(appWidgetId);
+			}
+		}
+	}
+
+	private void addAppWidget(Intent intent) {
+		// TODO: catch bad widget exception when sent
+		int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+		AppWidgetProviderInfo appWidget = appWidgetManager.getAppWidgetInfo(appWidgetId);
+
+		if (appWidget.configure != null) {
+			// Launch over to configure widget, if needed
+			Intent configureIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_CONFIGURE);
+			configureIntent.setComponent(appWidget.configure);
+			configureIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+
+			startActivityForResult(configureIntent, REQUEST_CREATE_APPWIDGET);
+		} else {
+			// Otherwise just add it
+			onActivityResult(REQUEST_CREATE_APPWIDGET, Activity.RESULT_OK, intent);
+		}
+	}
+
+	/**
+	 * Add a widget to the workspace.
+	 * 
+	 * @param data
+	 *            The intent describing the appWidgetId.
+	 * @param cellInfo
+	 *            The position on screen where to create the widget.
+	 */
+	private void completeAddAppWidget(Intent data, CellLayout.CellInfo cellInfo) {
+		Bundle extras = data.getExtras();
+		int appWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
+
+		Log.d(LOG_TAG, "dumping extras content=" + extras.toString());
+
+		AppWidgetProviderInfo appWidgetInfo = appWidgetManager.getAppWidgetInfo(appWidgetId);
+
+		// TODO widgets not ready yet
+
+		// // Calculate the grid spans needed to fit this widget
+		// CellLayout layout = (CellLayout)
+		// mWorkspace.getChildAt(cellInfo.screen);
+		// int[] spans = layout.rectToCell(appWidgetInfo.minWidth,
+		// appWidgetInfo.minHeight);
+		//
+		// // Try finding open space on Launcher screen
+		// final int[] xy = mCellCoordinates;
+		// if (!findSlot(cellInfo, xy, spans[0], spans[1])) {
+		// if (appWidgetId != -1) mAppWidgetHost.deleteAppWidgetId(appWidgetId);
+		// return;
+		// }
+		//
+		// // Build Launcher-specific widget info and save to database
+		// LauncherAppWidgetInfo launcherInfo = new
+		// LauncherAppWidgetInfo(appWidgetId);
+		// launcherInfo.spanX = spans[0];
+		// launcherInfo.spanY = spans[1];
+		//
+		// LauncherModel.addItemToDatabase(this, launcherInfo,
+		// LauncherSettings.Favorites.CONTAINER_DESKTOP,
+		// mWorkspace.getCurrentScreen(), xy[0], xy[1], false);
+		//
+		// if (!mRestoring) {
+		// mDesktopItems.add(launcherInfo);
+		//
+		// // Perform actual inflation because we're live
+		// launcherInfo.hostView = mAppWidgetHost.createView(this, appWidgetId,
+		// appWidgetInfo);
+		//
+		// launcherInfo.hostView.setAppWidget(appWidgetId, appWidgetInfo);
+		// launcherInfo.hostView.setTag(launcherInfo);
+		//
+		// mWorkspace.addInCurrentScreen(launcherInfo.hostView, xy[0], xy[1],
+		// launcherInfo.spanX, launcherInfo.spanY, isWorkspaceLocked());
+		// }
 	}
 }

@@ -1,8 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res/com.entertailion.android.launcher"
     android:id="@+id/dock"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
+   <!--com.entertailion.android.launcher.appwidget.Workspace
+        android:id="@+id/workspace"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        launcher:defaultScreen="1" /-->
 
     <ImageView
         android:id="@+id/top_gradient"
@@ -155,5 +162,6 @@
         android:paddingRight="5.0dip"
         android:scaleType="fitXY"
         android:src="@drawable/menu" />
+
 
 </RelativeLayout>

@@ -28,4 +28,6 @@
     <color name="weather_temp_shadow">#FF000000</color>
     <color name="weather_day_color">#FFFF00</color>
     <color name="weather_day_shadow">#FF000000</color>
+    <color name="appwidget_error_color">#FCCC</color>
+    <color name="window_background">#000000</color>
 </resources>

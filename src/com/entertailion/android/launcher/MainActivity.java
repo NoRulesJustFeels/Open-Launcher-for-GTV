@@ -53,6 +53,11 @@ public class MainActivity extends Activity {
 		copyrightTextView.setTypeface(lightTypeface);
 		TextView feedbackTextView = (TextView) findViewById(R.id.feedback_text);
 		feedbackTextView.setTypeface(lightTypeface);
+		TextView instructionsTextView = (TextView) findViewById(R.id.instructions_text);
+		instructionsTextView.setTypeface(lightTypeface);
+		if (Utils.isVizioCoStar()) {
+			instructionsTextView.setText(getString(R.string.about_instructions_vizio));
+		}
 
 		((Button) findViewById(R.id.button_web)).setOnClickListener(new OnClickListener() {
 

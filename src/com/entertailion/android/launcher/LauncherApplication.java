@@ -339,54 +339,61 @@ public class LauncherApplication extends Application {
 	private class ApplicationsIntentReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
-				String packageName = intent.getDataString().substring(8); // package:com.example.app
-				// Remove app from rows
-				ArrayList<RowInfo> rows = RowsTable.getRows(context);
-				if (rows != null) {
-					for (RowInfo row : rows) {
-						ArrayList<ItemInfo> rowItems = ItemsTable.getItems(context, row.getId());
-						if (rowItems!=null) {
-							for (ItemInfo itemInfo : rowItems) {
-								if (itemInfo instanceof ApplicationInfo) {
-									try {
-										if (itemInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
-	
-											if (rowItems.size() == 1) {
-												// TODO what if last row?
-												if (rows.size() > 1) {
+			final String action = intent.getAction();
+			if (action != null
+					&& (Intent.ACTION_PACKAGE_CHANGED.equals(action) || Intent.ACTION_PACKAGE_REMOVED.equals(action) || Intent.ACTION_PACKAGE_ADDED
+							.equals(action))) {
+				String packageName = intent.getData().getSchemeSpecificPart();
+				boolean replacing = intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
+				Log.d(LOG_TAG, "replacing=" + replacing);
+				if (!replacing && intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+					// Remove app from rows
+					ArrayList<RowInfo> rows = RowsTable.getRows(context);
+					if (rows != null) {
+						for (RowInfo row : rows) {
+							ArrayList<ItemInfo> rowItems = ItemsTable.getItems(context, row.getId());
+							if (rowItems != null) {
+								for (ItemInfo itemInfo : rowItems) {
+									if (itemInfo instanceof ApplicationInfo) {
+										try {
+											if (itemInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
+
+												if (rowItems.size() == 1) {
+													// TODO what if last row?
+													if (rows.size() > 1) {
+														ItemsTable.deleteItem(context, itemInfo.getId());
+														RowsTable.deleteRow(context, row.getId());
+													}
+												} else {
 													ItemsTable.deleteItem(context, itemInfo.getId());
-													RowsTable.deleteRow(context, row.getId());
 												}
-											} else {
-												ItemsTable.deleteItem(context, itemInfo.getId());
 											}
+										} catch (Exception e) {
+											Log.d(LOG_TAG, "onReceive", e);
 										}
-									} catch (Exception e) {
-										Log.d(LOG_TAG, "onReceive", e);
 									}
 								}
 							}
 						}
 					}
-				}
-				// Remove app from recents
-				ArrayList<ApplicationInfo> persistedRecents = RecentAppsTable.getAllRecentApps(context);
-				if (persistedRecents != null) {
-					for (ApplicationInfo applicationInfo : persistedRecents) {
-						if (applicationInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
-							try {
-								RecentAppsTable.deleteRecentApp(context, applicationInfo.getId());
-								break;
-							} catch (Exception e) {
-								Log.d(LOG_TAG, "onReceive", e);
+					// Remove app from recents
+					ArrayList<ApplicationInfo> persistedRecents = RecentAppsTable.getAllRecentApps(context);
+					if (persistedRecents != null) {
+						for (ApplicationInfo applicationInfo : persistedRecents) {
+							if (applicationInfo.getIntent().getComponent().getPackageName().equals(packageName)) {
+								try {
+									RecentAppsTable.deleteRecentApp(context, applicationInfo.getId());
+									break;
+								} catch (Exception e) {
+									Log.d(LOG_TAG, "onReceive", e);
+								}
 							}
 						}
 					}
 				}
+				loadApplications();
+				loadRecents();
 			}
-			loadApplications();
-			loadRecents();
 		}
 	}
 }
