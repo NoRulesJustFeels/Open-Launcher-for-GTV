@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Home -->
+    <string name="home_title">Open Launcher</string>
+    <string name="show_all_apps">모든 앱</string>
+    <string name="notifications">알림</string>
+    <string name="bookmarks">브라우저 즐겨찾기</string>
+    <string name="browser_history">브라우저 기록</string>
+    <string name="all_apps">모든 어플리케이션</string>
+    <string name="spotlight_web_apps">스포트라이트 웹 앱</string>
+    <string name="live_tv">라이브 TV</string>
+
+    <!-- Home Menus -->
+    <string name="menu_about">알아보기</string>
+    	<!-- Added text for distinguishment of system or OpenLauncher setting -->
+    <string name="menu_settings">Open Launcher 설정</string>
+    <string name="menu_system_settings">시스템 설정</string>
+    <string name="menu_add_row">줄 추가</string>
+    <string name="menu_add_app">앱 추가</string>
+    <string name="menu_add_spotlight_web_app">스포트라이트 웹 앱 추가</string>
+    <string name="menu_add_bookmark">브라우저 즐겨찾기 추가</string>
+    <string name="menu_delete_item">아이템 삭제</string>
+    <string name="menu_delete_row">줄 삭제</string>
+    <string name="menu_uninstall_app">앱 제거</string>
+    <string name="menu_move_item">아이템 이동</string>
+    <string name="menu_move_item_instuctions">좌우 화살표 버튼으로 움직이고 확인을 눌러 새로운 위치를 선택.</string>
+    <string name="menu_change_row_order">줄 순서 변경</string>
+    <string name="menu_change_row_order_done">완료</string>
+    <string name="menu_change_row_order_instructions">줄 이름을 클릭하여 선택하고, 위 아래로 움직인 후 다시 클릭하여 새로운 위치로 지정:</string>
+    <string name="menu_add_widget">위젯 추가</string>
+
+    <!-- Layers -->
+    <string name="layer_all_apps">모든 앱</string>
+    <string name="layer_recent_apps">최근 앱</string>
+    <string name="layer_favorites">즐겨찾기</string>
+    <string name="layer_web_apps">스포트라이트 웹 앱</string>
+    <string name="unknown">Unknown</string>
+
+    <!-- Message displayed when a shortcut is created by an external application -->
+    <string name="shortcut_installed">바로가기 \"<xliff:g id="name">%s</xliff:g>\" 생성됨.</string>
+    <!-- Message displayed when a shortcut is created by an external application -->
+    <string name="shortcut_not_installed">바로가기 \"<xliff:g id="name" example="">%s</xliff:g>\" 은 생성될 수 없음.</string>
+    <!-- Message displayed when a shortcut is uninstalled by an external application -->
+    <string name="shortcut_uninstalled">바로가기 \"<xliff:g id="name" example="">%s</xliff:g>\" 가 제거됨.</string>
+    <!-- Message displayed when an external application attemps to create a shortcut that already exists -->
+    <string name="shortcut_duplicate">바로가기 \"<xliff:g id="name" example="">%s</xliff:g>\" 는 이미 존재함.</string>
+
+    <!-- About -->
+    <string name="about_title">Open Launcher</string>
+    <string name="about_button_privacy_policy">개인보호 보호정책</string>
+    <string name="about_button_privacy_policy_url">http://blog.entertailion.com/privacy-policy</string>
+    <string name="about_button_web">웹 사이트</string>
+    <string name="about_button_web_url">http://openlauncher.com</string>
+    <string name="about_button_more_apps">더 많은 앱</string>
+    <string name="about_button_more_apps_url">https://play.google.com/store/apps/developer?id=ENTERTAILION+LLC</string>
+    <string name="about_version_title">Open Launcher %s</string>
+    <string name="about_button_feedback">피드백</string>
+    <string name="about_button_feedback_email">feedback@openlauncher.com</string>
+    <string name="about_copyright">\u00A9 2013 ENTERTAILION LLC. All other trademarks and copyrights are property of their respective owners. All rights reserved.</string>
+    <string name="unknown_build">Unknown</string>
+    <string name="about_instructions">홈 버튼을 눌러 런처를 호출합니다. 시스템 설정을 통해 기존의 기본 런처 선택을 초기화 해야 할 수도 있습니다. 어플리케이션/어플리케이션 관리/홈 으로 이동한 다음, \'기본값 초기화\' 버튼을 클릭하세요. </string>
+    	<!-- Not sure Visio supports Korean. -->
+    <string name="about_instructions_vizio">홈 버튼을 눌러 런처를 호출합니다. 시스템 설정을 통해 기존의 기본 런처 선택을 초기화 해야 할 수도 있습니다. 어플리케이션/어플리케이션 관리/AppLaucher 으로 이동한 다음, \'기본값 초기화\' 버튼을 클릭하세요.</string>
+    <string name="about_button_uninstall">Open Luancher 삭제</string> <!-- Added text for more clear functionality-->
+
+    <!-- Introduction -->
+    <string name="introduction_instruction1">화살표 버튼들을 사용하여 각 줄에 즐겨찾기한 앱을 탐색.</string>
+    <string name="introduction_instruction2">메뉴 버튼을 사용하여 줄과 즐겨찾기를 추가.</string>
+    <string name="introduction_button">확인</string>
+
+    <!-- Preferences -->
+    <string name="preferences_category_general">일반 설정</string>
+    <string name="preferences_general_clock_title">시계</string>
+    <string name="preferences_general_clock_summary_checked">시계 표시</string>
+    <string name="preferences_general_clock_summary_unchecked">시계 숨김</string>
+    <string name="preferences_general_weather_title">날씨 (USA only)</string>
+    <string name="preferences_general_weather_summary_checked">날씨 표시</string>
+    <string name="preferences_general_weather_summary_unchecked">날씨 숨김</string>
+    <string name="preferences_general_livetv_title">시작시 라이브 TV 설정</string>
+    <string name="preferences_general_livetv_summary_checked">시작시 라이브 TV 실행 함</string>
+    <string name="preferences_general_livetv_summary_unchecked">시작시 라이브 TV 실행 안함</string>
+    <string name="preferences_category_rows">줄</string>
+    <string name="preferences_rows_row_name_title">줄 이름</string>
+    <string name="preferences_rows_row_name_summary_checked">줄 이름 표시</string>
+    <string name="preferences_rows_row_name_summary_unchecked">줄 이름 숨김</string>
+    <string name="preferences_rows_item_name_title">앱 이름</string>
+    <string name="preferences_rows_item_name_summary_checked">앱 이름 표시</string>
+    <string name="preferences_rows_item_name_summary_unchecked">앱 이름 숨김</string>
+    <string name="preferences_general_wallpaper_title">배경화면</string>
+    <string name="preferences_general_wallpaper_summary">시스템 배경화면 설정</string>
+
+    <!-- Dialogs -->
+    <string name="dialog_current_row">현재 줄</string>
+    <string name="dialog_new_row">새로운 줄</string>
+    <string name="dialog_new_row_name">줄 이름 입력</string>
+    <string name="dialog_new_row_name_alert">새로운 줄의 이름을 입력해야 합니다.</string>
+    <string name="dialog_delete_item_message">현재 아이템을 삭제하시겠습니까?</string>
+    <string name="dialog_yes">네</string>
+    <string name="dialog_no">아니오</string>
+    <string name="dialog_ok">확인</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="dialog_delete_row_message">현재 줄을 삭제하시겠습니까?</string>
+    <string name="dialog_select_row">%s 에 대한 줄을 선택</string>
+    <string name="dialog_name">이름</string>
+    <string name="dialog_channel_name_alert">채널명을 입력하여야 합니다.</string>
+
+    <!-- Rating -->
+    <string name="rating_title">Open Launcher 평가</string>
+    <string name="rating_message">Open Launcher를 즐겁게 사용하고 있으시다면, 잠시만 시간을 들여 평가해 주세요. 후원에 감사드립니다!</string>
+    <string name="rating_ok">앱 평가</string>
+    <string name="rating_remind">나중에 알림</string>
+    <string name="rating_no">아니오, 됐습니다</string>
+
+    <!-- Weather -->
+    <string name="day_sunday">일</string>
+    <string name="day_monday">월</string>
+    <string name="day_tuesday">화</string>
+    <string name="day_wednesday">수</string>
+    <string name="day_thursday">목</string>
+    <string name="day_friday">금</string>
+    <string name="day_saturday">토</string>
+    
+    <!-- Title of dialog that appears after user selects Wallpaper from menu -->
+    <string name="chooser_wallpaper">다음으로부터 배경화면 선택</string>
+    <!-- Button label on Wallpaper Gallery screen; user selects this button to set a specific wallpaper -->
+    <string name="wallpaper_instructions">배경화면 지정</string>
+    <string name="wallpapers">배경화면</string>
+    <string name="photos">사진</string>
+    <string name="live_wallpapers">라이브 배경화면</string>
+    <string name="wallpaper_photos_instructions">사진 앱으로부터 배경화면을 지정하려면, 이미지를 최대화면으로 본 상태에서 메뉴 버튼을 누르십시오.</string>
+    
+    <!--  Widgets -->
+    <string name="gadget_error_text">위젯을 불러오는 중 문제 발생</string>
+    
+</resources>
