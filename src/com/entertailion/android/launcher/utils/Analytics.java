@@ -47,6 +47,7 @@ public class Analytics {
 	public static final String DIALOG_SPOTLIGHT_WEB_APPS = "dialog.spotlight_web_apps";
 	public static final String DIALOG_ADD_APP = "dialog.add_app";
 	public static final String DIALOG_ADD_SPOTLIGHT_WEB_APP = "dialog.add_spotlight_web_app";
+	public static final String DIALOG_ADD_BROWSER_BOOKMARK = "dialog.add_browser_bookmark";
 	public static final String DIALOG_ADD_SHORTCUT = "dialog.add_shortcut";
 	public static final String DIALOG_DELETE_ITEM = "dialog.delete_item";
 	public static final String DIALOG_DELETE_ROW = "dialog.delete_row";
@@ -75,6 +76,8 @@ public class Analytics {
 	public static final String ADD_APP_WITH_ROW = "add.app_with_row";
 	public static final String ADD_SPOTLIGHT_WEB_APP = "add.spotlight_web_app";
 	public static final String ADD_SPOTLIGHT_WEB_APP_WITH_ROW = "add.spotlight_web_app_with_row";
+	public static final String ADD_BROWSER_BOOKMARK = "add.browser_bookmark";
+	public static final String ADD_BROWSER_BOOKMARK_WITH_ROW = "add.browser_bookmark_with_row";
 	public static final String ADD_SHORTCUT = "add.shortcut";
 	public static final String ADD_SHORTCUT_WITH_ROW = "add.shortcut_with_row";
 	public static final String DELETE_ITEM = "delete.item";
@@ -85,6 +88,7 @@ public class Analytics {
 	public static final String WIDGET_PICK = "widget.pick";
 	public static final String WIDGET_ADD = "widget.add";
 	public static final String MOVE_ITEM = "move.item";
+	public static final String CHANGE_ROW_NAME = "row.change_name";
 
 	private static Context context;
 

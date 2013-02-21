@@ -46,6 +46,7 @@ public class RowGallery extends LinearLayout {
 		addView(inflate(launcher, R.layout.gallery_widget, null));
 
 		gallery = (EcoGallery) findViewById(R.id.gallery);
+		gallery.setCallbackDuringFling(false);
 		gallery.setUnselectedAlpha(GALLERY_UNSELECTECTED_ALPHA);
 		gallery.setGravity(Gravity.CENTER_HORIZONTAL);
 		gallery.setAnimationDuration(GALLERY_ANIMATION_DURATION);

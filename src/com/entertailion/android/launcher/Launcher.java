@@ -110,13 +110,15 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	private static final int MENU_ABOUT = MENU_SETTINGS + 1;
 	private static final int MENU_ADD_APP = MENU_ABOUT + 1;
 	private static final int MENU_ADD_SPOTLIGHT_WEB_APP = MENU_ADD_APP + 1;
-	private static final int MENU_DELETE_ITEM = MENU_ADD_SPOTLIGHT_WEB_APP + 1;
+	private static final int MENU_ADD_BROWSER_BOOKMARK = MENU_ADD_SPOTLIGHT_WEB_APP + 1;
+	private static final int MENU_DELETE_ITEM = MENU_ADD_BROWSER_BOOKMARK + 1;
 	private static final int MENU_DELETE_ROW = MENU_DELETE_ITEM + 1;
 	private static final int MENU_UNINSTALL_APP = MENU_DELETE_ROW + 1;
 	private static final int MENU_SYSTEM_SETTINGS = MENU_UNINSTALL_APP + 1;
 	private static final int MENU_MOVE_ITEM = MENU_SYSTEM_SETTINGS + 1;
 	private static final int MENU_CHANGE_ROW_ORDER = MENU_MOVE_ITEM + 1;
 	private static final int MENU_ADD_WIDGET = MENU_CHANGE_ROW_ORDER + 1;
+	private static final int MENU_CHANGE_ROW_NAME = MENU_ADD_WIDGET + 1;
 
 	private static final int UPDATE_ITEM_STATUS = 1;
 
@@ -414,21 +416,25 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	 * Bind the rows of favorite apps configured by the user.
 	 */
 	private void bindItems() {
-		ArrayList<RowInfo> rows = RowsTable.getRows(this);
-		if (rows != null) {
-			// Get the items for each row
-			for (RowInfo row : rows) {
-				Log.d(LOG_TAG, "row=" + row.getPosition());
-				try {
-					ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, row.getId());
-					mapApplicationIcons(rowItems);
-					ItemAdapter adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
-					RowGallery gallery = new RowGallery(this, row.getId(), row.getTitle().toUpperCase(), adapter);
-					scrollViewContent.addView(gallery, 0);
-				} catch (Exception e) {
-					Log.e(LOG_TAG, "bindItems", e);
+		try {
+			ArrayList<RowInfo> rows = RowsTable.getRows(this);
+			if (rows != null) {
+				// Get the items for each row
+				for (RowInfo row : rows) {
+					Log.d(LOG_TAG, "row=" + row.getPosition());
+					try {
+						ArrayList<ItemInfo> rowItems = ItemsTable.getItems(this, row.getId());
+						mapApplicationIcons(rowItems);
+						ItemAdapter adapter = new ItemAdapter(this, rowItems, infiniteScrolling);
+						RowGallery gallery = new RowGallery(this, row.getId(), row.getTitle().toUpperCase(), adapter);
+						scrollViewContent.addView(gallery, 0);
+					} catch (Exception e) {
+						Log.e(LOG_TAG, "bindItems", e);
+					}
 				}
 			}
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "bindItems", e);
 		}
 	}
 
@@ -461,11 +467,15 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			if (infiniteScrolling) {
 				pos = pos % currentGallery.getAdapter().getRealCount();
 			}
-			ItemInfo itemInfo = (ItemInfo) gallery.getItemAtPosition(pos);
-			itemInfo.invoke(this);
-			if (itemInfo instanceof ApplicationInfo) {
-				ApplicationInfo applicationInfo = (ApplicationInfo) itemInfo;
-				RecentAppsTable.persistRecentApp(this, applicationInfo);
+			try {
+				ItemInfo itemInfo = (ItemInfo) gallery.getItemAtPosition(pos);
+				itemInfo.invoke(this);
+				if (itemInfo instanceof ApplicationInfo) {
+					ApplicationInfo applicationInfo = (ApplicationInfo) itemInfo;
+					RecentAppsTable.persistRecentApp(this, applicationInfo);
+				}
+			} catch (Exception e) {
+				Log.e(LOG_TAG, "onItemClick", e);
 			}
 		}
 		handledLongClick = false;
@@ -528,6 +538,8 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		updateMenuMoveItem(moveItem);
 		MenuItem changeRowOrderItem = contextMenu.findItem(MENU_CHANGE_ROW_ORDER);
 		updateMenuChangeRowOrder(changeRowOrderItem);
+		MenuItem changeRowNameItem = contextMenu.findItem(MENU_CHANGE_ROW_NAME);
+		updateMenuChangeRowName(changeRowNameItem);
 		MenuItem uninstallApp = contextMenu.findItem(MENU_UNINSTALL_APP);
 		updateMenuUninstallApp(uninstallApp);
 	}
@@ -608,6 +620,22 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	}
 
 	/**
+	 * Utility method to set the state of the change row name menu option.
+	 * 
+	 * @param moveItem
+	 */
+	private void updateMenuChangeRowName(MenuItem changeRowNameItem) {
+		if (changeRowNameItem != null) {
+			if (currentGallery == recentsGallery) {
+				// cannot move item from recents row
+				changeRowNameItem.setEnabled(false);
+			} else {
+				changeRowNameItem.setEnabled(true);
+			}
+		}
+	}
+
+	/**
 	 * Utility method to set the state of the uninstall app menu option.
 	 * 
 	 * @param uninstallApp
@@ -668,6 +696,10 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		if (addSpotlightWebApp != null) {
 			addSpotlightWebApp.setVisible(showItems);
 		}
+		MenuItem addBrowserBookmarkWebApp = menu.findItem(MENU_ADD_BROWSER_BOOKMARK);
+		if (addBrowserBookmarkWebApp != null) {
+			addBrowserBookmarkWebApp.setVisible(showItems);
+		}
 		MenuItem deleteItem = menu.findItem(MENU_DELETE_ITEM);
 		if (deleteItem != null) {
 			deleteItem.setVisible(showItems);
@@ -687,6 +719,11 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		if (changeRowOrderItem != null) {
 			changeRowOrderItem.setVisible(showItems);
 			updateMenuChangeRowOrder(changeRowOrderItem);
+		}
+		MenuItem changeRowNameItem = menu.findItem(MENU_CHANGE_ROW_NAME);
+		if (changeRowNameItem != null) {
+			changeRowNameItem.setVisible(showItems);
+			updateMenuChangeRowName(changeRowNameItem);
 		}
 		MenuItem uninstallApp = menu.findItem(MENU_UNINSTALL_APP);
 		if (uninstallApp != null) {
@@ -777,8 +814,13 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		if (addAllMenuItems) {
 			menu.add(0, MENU_ADD_APP, 0, R.string.menu_add_app).setIcon(R.drawable.ic_menu_add);
 			menu.add(0, MENU_ADD_SPOTLIGHT_WEB_APP, 0, R.string.menu_add_spotlight_web_app).setIcon(R.drawable.ic_menu_add);
+			// TODO can't add this feature until find better way to get high-res
+			// icons for most web sites
+			// menu.add(0, MENU_ADD_BROWSER_BOOKMARK, 0,
+			// R.string.menu_add_browser_bookmark).setIcon(R.drawable.ic_menu_add);
 			menu.add(0, MENU_MOVE_ITEM, 0, R.string.menu_move_item).setIcon(R.drawable.ic_menu_left_right);
 			menu.add(0, MENU_CHANGE_ROW_ORDER, 0, R.string.menu_change_row_order).setIcon(R.drawable.ic_menu_up_down);
+			menu.add(0, MENU_CHANGE_ROW_NAME, 0, R.string.menu_change_row_name).setIcon(R.drawable.ic_menu_row_name);
 			menu.add(0, MENU_DELETE_ITEM, 0, R.string.menu_delete_item).setIcon(R.drawable.ic_menu_delete);
 			menu.add(0, MENU_DELETE_ROW, 0, R.string.menu_delete_row).setIcon(R.drawable.ic_menu_delete);
 			menu.add(0, MENU_UNINSTALL_APP, 0, R.string.menu_uninstall_app).setIcon(R.drawable.ic_menu_trash);
@@ -817,6 +859,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		case MENU_CHANGE_ROW_ORDER:
 			Dialogs.displayChangeRowOrder(this);
 			return true;
+		case MENU_CHANGE_ROW_NAME:
+			Dialogs.displayChangeRowName(this);
+			return true;
 		case MENU_DELETE_ROW:
 			Dialogs.displayDeleteRow(this);
 			return true;
@@ -829,6 +874,9 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 			return true;
 		case MENU_ADD_SPOTLIGHT_WEB_APP:
 			Dialogs.displayAddSpotlight(this);
+			return true;
+		case MENU_ADD_BROWSER_BOOKMARK:
+			Dialogs.displayAddBrowserBookmark(this);
 			return true;
 		case MENU_SETTINGS:
 			Intent intent = new Intent(this, PreferencesActivity.class);
@@ -994,7 +1042,7 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	}
 
 	/**
-	 * Update the item name and layer name It is critical that this is done as
+	 * Update the item name and layer name. It is critical that this is done as
 	 * quickly as possible otherwise the gallery animation will not be smooth.
 	 * 
 	 * @param gallery
@@ -1269,6 +1317,32 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 	}
 
 	/**
+	 * Change the current row name.
+	 */
+	public void changeCurrentRowName(String name) {
+		Log.d(LOG_TAG, "changeCurrentRowName");
+		try {
+			int rowId = (Integer) currentGallery.getTag(R.id.row_id);
+			Log.d(LOG_TAG, "rowId=" + rowId);
+			// Adjust other row positions
+			ArrayList<RowInfo> rows = RowsTable.getRows(this);
+			if (rows != null) {
+				for (RowInfo row : rows) {
+					if (row.getId() == rowId) {
+						RowsTable.updateRow(this, row.getId(), name, row.getPosition(), row.getType());
+						break;
+					}
+				}
+			}
+
+			reloadAllGalleries();
+			Analytics.logEvent(Analytics.CHANGE_ROW_NAME);
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "changeCurrentRowName", e);
+		}
+	}
+
+	/**
 	 * Reload the item data for a row.
 	 * 
 	 * @param rowId
@@ -1414,5 +1488,13 @@ public class Launcher extends Activity implements OnItemSelectedListener, OnItem
 		// mWorkspace.addInCurrentScreen(launcherInfo.hostView, xy[0], xy[1],
 		// launcherInfo.spanX, launcherInfo.spanY, isWorkspaceLocked());
 		// }
+	}
+
+	public Handler getHandler() {
+		return handler;
+	}
+
+	public int getCurrentGalleryId() {
+		return (Integer) currentGallery.getTag(R.id.row_id);
 	}
 }

@@ -814,6 +814,29 @@ public class Utils {
 							}
 						}
 					}
+					if (href == null || href.trim().length() == 0) {
+						// Find the Twitter card icon
+						metas = doc.select("meta[name=twitter:image]");
+						if (metas.size() > 0) {
+							Element link = metas.first();
+							href = link.attr("abs:value");
+							// weird jsoup bug: abs doesn't always work
+							if (href==null || href.trim().length()==0) {
+								href = url +link.attr("value");
+							}
+						}
+					}
+					if (href == null || href.trim().length() == 0) {
+						metas = doc.select("link[itemprop=thumbnailUrl]");
+						if (metas.size() > 0) {
+							Element link = metas.first();
+							href = link.attr("abs:href");
+							// weird jsoup bug: abs doesn't always work
+							if (href==null || href.trim().length()==0) {
+								href = url +link.attr("href");
+							}
+						}
+					}
 					if (href != null && href.trim().length() > 0) {
 						try {
 							Bitmap bitmap = Utils.getBitmapFromURL(href);

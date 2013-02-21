@@ -20,7 +20,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -30,6 +33,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.Browser;
+import android.text.Editable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -396,47 +400,51 @@ public class Dialogs {
 	 * @param context
 	 */
 	public static void displayBookmarks(final Launcher context) {
-		final Dialog dialog = new Dialog(context);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.bookmarks_list);
-
-		ListView listView = (ListView) dialog.findViewById(R.id.list);
 		final ArrayList<BookmarkInfo> bookmarks = loadBookmarks(context);
-		Collections.sort(bookmarks, new Comparator<BookmarkInfo>() {
-
-			@Override
-			public int compare(BookmarkInfo lhs, BookmarkInfo rhs) {
-				return lhs.getTitle().toLowerCase().compareTo(rhs.getTitle().toLowerCase());
-			}
-
-		});
-		listView.setAdapter(new BookmarkAdapter(context, bookmarks));
-		listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
-				context.startActivity(browserIntent);
-				context.showCover(false);
-				dialog.dismiss();
-				Analytics.logEvent(Analytics.INVOKE_BOOKMARK);
-			}
-
-		});
-		listView.setDrawingCacheEnabled(true);
-		listView.setOnKeyListener(onKeyListener);
-		dialog.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				context.showCover(false);
-			}
-
-		});
-		context.showCover(true);
-		dialog.show();
-		Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
+		if (bookmarks.size()>0) {
+			final Dialog dialog = new Dialog(context);
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.setContentView(R.layout.bookmarks_list);
+	
+			ListView listView = (ListView) dialog.findViewById(R.id.list);
+			Collections.sort(bookmarks, new Comparator<BookmarkInfo>() {
+	
+				@Override
+				public int compare(BookmarkInfo lhs, BookmarkInfo rhs) {
+					return lhs.getTitle().toLowerCase().compareTo(rhs.getTitle().toLowerCase());
+				}
+	
+			});
+			listView.setAdapter(new BookmarkAdapter(context, bookmarks));
+			listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+	
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
+					context.startActivity(browserIntent);
+					context.showCover(false);
+					dialog.dismiss();
+					Analytics.logEvent(Analytics.INVOKE_BOOKMARK);
+				}
+	
+			});
+			listView.setDrawingCacheEnabled(true);
+			listView.setOnKeyListener(onKeyListener);
+			dialog.setOnDismissListener(new OnDismissListener() {
+	
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					context.showCover(false);
+				}
+	
+			});
+			context.showCover(true);
+			dialog.show();
+			Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
+		} else {
+			displayAlert(context, context.getString(R.string.dialog_no_browser_bookmarks));
+		}
 	}
 
 	/**
@@ -487,39 +495,43 @@ public class Dialogs {
 	 * @param context
 	 */
 	public static void displayBrowserHistory(final Launcher context) {
-		final Dialog dialog = new Dialog(context);
-		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.bookmarks_list);
-
-		ListView listView = (ListView) dialog.findViewById(R.id.list);
 		final ArrayList<BookmarkInfo> bookmarks = loadBrowserHistory(context);
-		listView.setAdapter(new BookmarkAdapter(context, bookmarks));
-		listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
-				context.startActivity(browserIntent);
-				context.showCover(false);
-				dialog.dismiss();
-				Analytics.logEvent(Analytics.INVOKE_BOOKMARK);
-			}
-
-		});
-		listView.setDrawingCacheEnabled(true);
-		listView.setOnKeyListener(onKeyListener);
-		dialog.setOnDismissListener(new OnDismissListener() {
-
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				context.showCover(false);
-			}
-
-		});
-		context.showCover(true);
-		dialog.show();
-		Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
+		if (bookmarks.size()>0) {
+			final Dialog dialog = new Dialog(context);
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.setContentView(R.layout.bookmarks_list);
+	
+			ListView listView = (ListView) dialog.findViewById(R.id.list);
+			listView.setAdapter(new BookmarkAdapter(context, bookmarks));
+			listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+	
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(bookmark.getUrl()));
+					context.startActivity(browserIntent);
+					context.showCover(false);
+					dialog.dismiss();
+					Analytics.logEvent(Analytics.INVOKE_BOOKMARK);
+				}
+	
+			});
+			listView.setDrawingCacheEnabled(true);
+			listView.setOnKeyListener(onKeyListener);
+			dialog.setOnDismissListener(new OnDismissListener() {
+	
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					context.showCover(false);
+				}
+	
+			});
+			context.showCover(true);
+			dialog.show();
+			Analytics.logEvent(Analytics.DIALOG_BOOKMARKS);
+		} else {
+			displayAlert(context, context.getString(R.string.dialog_no_browser_history));
+		}
 	}
 
 	/**
@@ -536,7 +548,9 @@ public class Dialogs {
 				while (cursor.isAfterLast() == false) {
 					String title = cursor.getString(Browser.HISTORY_PROJECTION_TITLE_INDEX);
 					String url = cursor.getString(Browser.HISTORY_PROJECTION_URL_INDEX);
-					if (url != null && title != null) {
+					String bookmarkIndex = cursor.getString(Browser.HISTORY_PROJECTION_BOOKMARK_INDEX);
+					Log.d(LOG_TAG, "bookmarkIndex="+bookmarkIndex);
+					if (url != null && title != null && !bookmarkIndex.equals("1")) {
 						// check for duplicates
 						boolean found = false;
 						for (BookmarkInfo bookmarkInfo : bookmarks) {
@@ -759,6 +773,139 @@ public class Dialogs {
 		context.showCover(true);
 		dialog.show();
 		Analytics.logEvent(Analytics.DIALOG_ADD_SPOTLIGHT_WEB_APP);
+	}
+	
+	/**
+	 * Display dialog to the user for the browser bookmarks. Allow the user to add a
+	 * browser bookmark to an existing row or a new row.
+	 * 
+	 * @param context
+	 */
+	public static void displayAddBrowserBookmark(final Launcher context) {
+		final Dialog dialog = new Dialog(context);
+		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		dialog.setContentView(R.layout.add_browser_bookmarks_list);
+		
+		final EditText nameEditText = (EditText) dialog.findViewById(R.id.rowName);
+		final RadioButton currentRadioButton = (RadioButton) dialog.findViewById(R.id.currentRadio);
+		currentRadioButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				// hide the row name edit field if the current row radio button
+				// is selected
+				nameEditText.setVisibility(View.GONE);
+			}
+
+		});
+		final RadioButton newRadioButton = (RadioButton) dialog.findViewById(R.id.newRadio);
+		newRadioButton.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				// show the row name edit field if the new radio button is
+				// selected
+				nameEditText.setVisibility(View.VISIBLE);
+				nameEditText.requestFocus();
+			}
+
+		});
+
+		ListView listView = (ListView) dialog.findViewById(R.id.list);
+		final ArrayList<BookmarkInfo> bookmarks = loadBookmarks(context);
+		Collections.sort(bookmarks, new Comparator<BookmarkInfo>() {
+
+			@Override
+			public int compare(BookmarkInfo lhs, BookmarkInfo rhs) {
+				return lhs.getTitle().toLowerCase().compareTo(rhs.getTitle().toLowerCase());
+			}
+
+		});
+		listView.setAdapter(new BookmarkAdapter(context, bookmarks));
+		listView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
+				// run in thread since network logic needed to get bookmark icon
+				new Thread(new Runnable() {
+					public void run() {
+						// if the new row radio button is selected, the user must enter
+						// a name for the new row
+						String name = nameEditText.getText().toString().trim();
+						if (newRadioButton.isChecked() && name.length() == 0) {
+							nameEditText.requestFocus();
+							displayAlert(context, context.getString(R.string.dialog_new_row_name_alert));
+							return;
+						}
+						boolean currentRow = !newRadioButton.isChecked();
+						try {
+							BookmarkInfo bookmark = (BookmarkInfo) parent.getAdapter().getItem(position);
+							int rowId = 0;
+							int rowPosition = 0;
+							if (currentRow) {
+								rowId = context.getCurrentGalleryId();
+								ArrayList<ItemInfo> items = ItemsTable.getItems(context, rowId);
+								rowPosition = items.size(); // in last
+															// position
+															// for selected
+															// row
+							} else {
+								rowId = (int) RowsTable.insertRow(context, name, 0, RowInfo.FAVORITE_TYPE);
+								rowPosition = 0;
+							}
+							Intent intent = new Intent(Intent.ACTION_VIEW);
+							intent.setData(Uri.parse(bookmark.getUrl()));
+							
+							Uri uri = Uri.parse(bookmark.getUrl());
+							Log.d(LOG_TAG, "host=" + uri.getScheme() + "://" + uri.getHost());
+							String icon = Utils.getWebSiteIcon(context, "http://" + uri.getHost());
+							Log.d(LOG_TAG, "icon1=" + icon);
+							if (icon == null) {
+								// try base host address
+								int count = StringUtils.countMatches(uri.getHost(), ".");
+								if (count > 1) {
+									int index = uri.getHost().indexOf('.');
+									String baseHost = uri.getHost().substring(index + 1);
+									icon = Utils.getWebSiteIcon(context, "http://" + baseHost);
+									Log.d(LOG_TAG, "icon2=" + icon);
+								}
+							}
+							
+							ItemsTable.insertItem(context, rowId, rowPosition, bookmark.getTitle(), intent, icon, DatabaseHelper.SHORTCUT_TYPE);
+						} catch (Exception e) {
+							Log.e(LOG_TAG, "displayAddBrowserBookmark", e);
+						}
+						
+						// need to do this on UI thread
+						context.getHandler().post(new Runnable() {
+							public void run() {
+								context.showCover(false);
+								dialog.dismiss();
+								context.reloadAllGalleries();
+							}
+						});
+
+						if (currentRow) {
+							Analytics.logEvent(Analytics.ADD_BROWSER_BOOKMARK);
+						} else {
+							Analytics.logEvent(Analytics.ADD_BROWSER_BOOKMARK_WITH_ROW);
+						}
+
+					}
+				}).start();
+			}
+		});
+		listView.setDrawingCacheEnabled(true);
+		listView.setOnKeyListener(onKeyListener);
+		dialog.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				context.showCover(false);
+			}
+
+		});
+		context.showCover(true);
+		dialog.show();
+		Analytics.logEvent(Analytics.DIALOG_ADD_BROWSER_BOOKMARK);
 	}
 
 	/**
@@ -983,6 +1130,9 @@ public class Dialogs {
 	 * @param uri
 	 */
 	public static void displayShortcutsRowSelection(final Launcher context, final String name, final String icon, final String uri) {
+		if (uri==null) {
+			return;
+		}
 		final Dialog dialog = new Dialog(context);
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		final boolean isChannel = uri.startsWith("tv");
@@ -1229,5 +1379,29 @@ public class Dialogs {
 		context.showCover(true);
 		dialog.show();
 		Analytics.logEvent(Analytics.DIALOG_CHANGE_ROW_ORDER);
+	}
+	
+	/**
+	 * Change the name of the current row
+	 * 
+	 * @param context
+	 */
+	public static void displayChangeRowName(final Launcher context) {
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(context);
+		new AlertDialog.Builder(context)
+	    .setTitle(context.getString(R.string.dialog_row_name_title))
+	    .setMessage(context.getString(R.string.dialog_row_name))
+	    .setView(input)
+	    .setPositiveButton(context.getString(R.string.dialog_ok), new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	            Editable value = input.getText(); 
+	            context.changeCurrentRowName(value.toString());
+	        }
+	    }).setNegativeButton(context.getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	            // Do nothing.
+	        }
+	    }).show();
 	}
 }

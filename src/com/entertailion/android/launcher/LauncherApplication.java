@@ -278,46 +278,60 @@ public class LauncherApplication extends Application {
 			recents.clear();
 		}
 
-		ArrayList<ApplicationInfo> persistedRecents = RecentAppsTable.getAllRecentApps(this);
-		if (persistedRecents == null || persistedRecents.size() == 0) {
-			// first time, persist the system recent apps
-			RecentAppsTable.persistRecents(this);
-			persistedRecents = RecentAppsTable.getAllRecentApps(this);
-		}
+		try {
+			ArrayList<ApplicationInfo> persistedRecents = RecentAppsTable.getAllRecentApps(this);
+			if (persistedRecents == null || persistedRecents.size() == 0) {
+				// first time, persist the system recent apps
+				RecentAppsTable.persistRecents(this);
+				persistedRecents = RecentAppsTable.getAllRecentApps(this);
+			}
 
-		// get persisted recent apps
-		if (persistedRecents != null) {
-			for (ApplicationInfo application : applications) {
+			// get persisted recent apps
+			if (persistedRecents != null) {
 				for (ApplicationInfo recent : persistedRecents) {
-					if (recent.getIntent() != null && application.getIntent() != null && recent.getIntent().getComponent() != null
-							&& application.getIntent().getComponent() != null
-							&& recent.getIntent().getComponent().getClassName().equals(application.getIntent().getComponent().getClassName())) {
-						recent.setTitle(application.getTitle());
-						recent.setDrawable(application.getDrawable());
-						recents.add(recent);
-						break;
+					boolean found = false;
+					for (ApplicationInfo application : applications) {
+						if (recent.getIntent() != null && application.getIntent() != null && recent.getIntent().getComponent() != null
+								&& application.getIntent().getComponent() != null
+								&& recent.getIntent().getComponent().getClassName().equals(application.getIntent().getComponent().getClassName())) {
+							recent.setTitle(application.getTitle());
+							recent.setDrawable(application.getDrawable());
+							recents.add(recent);
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						// remove recent apps that don't exist anymore
+						try {
+							RecentAppsTable.deleteRecentApp(this, recent.getId());
+						} catch (Exception e) {
+							Log.e(LOG_TAG, "loadRecents", e);
+						}
 					}
 				}
 			}
-		}
 
-		// recents are empty immediately after a reboot and user hasn't invoked
-		// any apps and launcher just installed:
-		// add a default app to make the recents row visible
-		if (recents.size() == 0) {
-			boolean found = false;
-			for (ApplicationInfo applicationInfo : applications) {
-				// find the Google Play Store app
-				if (applicationInfo.getIntent().getComponent().getClassName().startsWith("com.android.vending")) {
-					recents.add(applicationInfo);
-					found = true;
-					break;
+			// recents are empty immediately after a reboot and user hasn't invoked
+			// any apps and launcher just installed:
+			// add a default app to make the recents row visible
+			if (recents.size() == 0) {
+				boolean found = false;
+				for (ApplicationInfo applicationInfo : applications) {
+					// find the Google Play Store app
+					if (applicationInfo.getIntent().getComponent().getClassName().startsWith("com.android.vending")) {
+						recents.add(applicationInfo);
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					// else grab the first app
+					recents.add(applications.get(0));
 				}
 			}
-			if (!found) {
-				// else grab the first app
-				recents.add(applications.get(0));
-			}
+		} catch (Exception e) {
+			Log.e(LOG_TAG, "loadRecents", e);
 		}
 	}
 

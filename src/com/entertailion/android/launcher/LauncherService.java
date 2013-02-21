@@ -63,8 +63,8 @@ public class LauncherService extends Service {
 		// free weather data only supported for USA
 		if (Utils.isUsa()) {
 			PendingIntent weatherIntent = PendingIntent.getBroadcast(this, 0, new Intent(this, WeatherReceiver.class), 0);
-			// start immediately, then every hour
-			am.setRepeating(AlarmManager.RTC_WAKEUP, 0, AlarmManager.INTERVAL_HOUR, weatherIntent);
+			// start immediately, then half hour
+			am.setRepeating(AlarmManager.RTC_WAKEUP, 0, AlarmManager.INTERVAL_HALF_HOUR, weatherIntent);
 		}
 	}
 

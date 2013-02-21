@@ -78,10 +78,11 @@ public class GalleryAdapter<T> extends ArrayAdapter<T> {
 
 		try {
 			updateView(iconView, position);
+			ItemInfo itemInfo = (ItemInfo) getItem(position);
+			iconView.setContentDescription(itemInfo.getTitle());
 		} catch (Exception e) {
 			Log.d(LOG_TAG, "getView", e);
 		}
-
 		iconView.setTag(R.id.pager_position, position);
 		return iconView;
 	}

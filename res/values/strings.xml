@@ -34,7 +34,7 @@
     <string name="menu_add_row">Add Row</string>
     <string name="menu_add_app">Add App</string>
     <string name="menu_add_spotlight_web_app">Add Spotlight Web App</string>
-    <string name="menu_add_bookmark">Add Browser Bookmark</string>
+    <string name="menu_add_browser_bookmark">Add Browser Bookmark</string>
     <string name="menu_delete_item">Delete Item</string>
     <string name="menu_delete_row">Delete Row</string>
     <string name="menu_uninstall_app">Uninstall App</string>
@@ -44,6 +44,7 @@
     <string name="menu_change_row_order_done">Done</string>
     <string name="menu_change_row_order_instructions">Click on the row name to select, then move up or down and click again to place in the new position:</string>
     <string name="menu_add_widget">Add Widget</string>
+    <string name="menu_change_row_name">Change Row Name</string>
 
     <!-- Layers -->
     <string name="layer_all_apps">ALL APPS</string>
@@ -118,6 +119,10 @@
     <string name="dialog_select_row">Select the row for %s</string>
     <string name="dialog_name">Name</string>
     <string name="dialog_channel_name_alert">You must enter a name for the channel.</string>
+    <string name="dialog_row_name_title">Row Name</string>
+    <string name="dialog_row_name">Enter the new name:</string>
+    <string name="dialog_no_browser_history">No browser history</string>
+    <string name="dialog_no_browser_bookmarks">No browser bookmarks</string>
 
     <!-- Rating -->
     <string name="rating_title">Rate Open Launcher</string>

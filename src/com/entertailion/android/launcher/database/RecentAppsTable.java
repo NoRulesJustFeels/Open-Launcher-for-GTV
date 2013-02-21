@@ -80,8 +80,7 @@ public class RecentAppsTable {
 					if (intentValue != null) {
 						intent = Intent.parseUri(cursor.getString(1), Intent.URI_INTENT_SCHEME);
 					}
-					ApplicationInfo recent = new ApplicationInfo();
-					recent.setIntent(intent);
+					ApplicationInfo recent = new ApplicationInfo(cursor.getInt(0), 0, null, intent);
 					recents.add(recent);
 				} while ((cursor.moveToNext()));
 			}
@@ -159,25 +158,27 @@ public class RecentAppsTable {
 			}
 		}
 		// trim the list of recents
-		if (recents != null && recents.size() >= MAX_RECENT_TASKS) {
+		while (recents != null && recents.size() >= MAX_RECENT_TASKS) {
+			Log.d(LOG_TAG, "size="+recents.size());
 			try {
 				deleteRecentApp(context, recents.get(0).getId());
 			} catch (Exception e) {
 				Log.e(LOG_TAG, "persistRecentApp", e);
 			}
+			recents = getAllRecentApps(context);
 		}
 	}
 
 	public static void deleteRecentApp(Context context, int id) throws Exception {
-		Log.d(LOG_TAG, "deleteRecentApp");
+		Log.d(LOG_TAG, "deleteRecentApp: "+id);
 
 		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		SQLiteDatabase db = databaseHelper.getWritableDatabase();
 		db.beginTransaction();
 		try {
-			db.delete(DatabaseHelper.RECENT_APPS_TABLE, DatabaseHelper.ID_COLUMN + "=?", new String[] { String.valueOf(id) });
+			int num = db.delete(DatabaseHelper.RECENT_APPS_TABLE, DatabaseHelper.ID_COLUMN + "=?", new String[] { String.valueOf(id) });
 			db.setTransactionSuccessful();
-			Log.d(LOG_TAG, "deleteRecentApp: success");
+			Log.d(LOG_TAG, "deleteRecentApp: success: "+num);
 		} catch (Exception e) {
 			Log.e(LOG_TAG, "deleteRecentApp: failed", e);
 			throw new Exception(e);
