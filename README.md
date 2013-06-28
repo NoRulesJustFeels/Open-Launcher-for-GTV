@@ -1,7 +1,7 @@
 Open-Launcher-for-GTV
 =====================
 
-<p>The ultimate Google TV launcher. The Open Launcher app is an alternative to the default home launcher app provided by Google TV. The app is published as a free app in the <a href="https://play.google.com/store/apps/details?id=com.entertailion.android.launcher">Google Play Store</a>.</p>
+<p>The ultimate Google TV launcher. The Open Launcher app is an alternative to the default home launcher app provided by Google TV. The app is published as a free app in the <a href="https://play.google.com/store/apps/details?id=com.entertailion.android.launcher">Google Play Store</a> or you can <a href="https://dl.dropboxusercontent.com/u/17958951/Open-Launcher-for-GTV.apk">download</a> it directly.</p>
 
 <p>The user interface consists of rows of your favorite apps which you can customize. It also includes a special row at the bottom for the most recent apps launched.</p>
 
